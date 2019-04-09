@@ -21,7 +21,6 @@ class Migration_create_table_settings extends Migration
 		$this->forge->addField('id');
 		$this->forge->addField($fields);
 
-		$this->forge->addUniqueKey('name');
 		$this->forge->addKey('created_at');
 		
 		$this->forge->createTable('settings');
