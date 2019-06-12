@@ -13,9 +13,9 @@ class Migration_create_table_settings extends Migration
 			'content'      => ['type' => 'VARCHAR', 'constraint' => 255],
 			'summary'      => ['type' => 'VARCHAR', 'constraint' => 255],
 			'protected'    => ['type' => 'BOOLEAN', 'default' => 1],
-			'deleted'      => ['type' => 'BOOLEAN', 'default' => 0],
 			'created_at'   => ['type' => 'DATETIME', 'null' => true],
 			'updated_at'   => ['type' => 'DATETIME', 'null' => true],
+			'deleted_at'   => ['type' => 'DATETIME', 'null' => true],
 		];
 		
 		$this->forge->addField('id');
