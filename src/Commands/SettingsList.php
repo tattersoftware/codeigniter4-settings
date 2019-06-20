@@ -17,7 +17,7 @@ class SettingsList extends BaseCommand
 		
 		// get all settings
 		$rows = $db->table('settings')->select('name, scope, content, summary, protected, created_at')
-			->where('deleted', 0)
+			->where('deleted_at IS NULL')
 			->orderBy('name', 'asc')
 			->get()->getResultArray();
 
