@@ -7,16 +7,16 @@ class SettingsException extends FrameworkException implements ExceptionInterface
 {
 	public static function forMissingName()
 	{
-		return new static("No name provided for setting lookup");
+		return new static(lang('Settings.missingName'));
 	}
 	
 	public static function forUnmatchedName(string $name)
 	{
-		return new static("No setting template named '{$name}'");
+		return new static(lang('Settings.unmatchedName', [$name]));
 	}
 	
 	public static function forProtectionViolation(string $name)
 	{
-		return new static("Modify attempt on protected setting '{$name}'");
+		return new static(lang('Settings.protectionViolation', [$name]));
 	}
 }
