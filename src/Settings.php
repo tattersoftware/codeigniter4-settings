@@ -96,7 +96,7 @@ class Settings
 	}
 	
 	// fetches the setting template from the settings table and handles errors
-	protected function loadTemplate(string $name)
+	public function getTemplate(string $name)
 	{
 		if (empty($name)):
 			if ($this->config->silent):
@@ -144,7 +144,7 @@ class Settings
 	// get a setting - checks session, then user, then global
 	public function get(string $name)
 	{
-		$setting = $this->loadTemplate($name);
+		$setting = $this->getTemplate($name);
 		if (empty($setting))
 			return null;
 
