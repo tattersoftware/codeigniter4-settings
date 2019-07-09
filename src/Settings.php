@@ -207,7 +207,7 @@ class Settings
 	// change a setting, null removes
     public function set(string $name, $content): bool
     {
-		$setting = $this->loadTemplate($name);
+		$setting = $this->getTemplate($name);
 		if (empty($setting))
 			return false;
 		
