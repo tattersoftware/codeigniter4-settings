@@ -31,20 +31,6 @@ Once the files are downloaded and included in the autoload, run any library migr
 to ensure the database is setup correctly:
 * `> php spark migrate -all`
 
-**Pro Tip:** You can add the spark command to your composer.json to ensure your database is
-always current with the latest release:
-```
-{
-	...
-    "scripts": {
-        "post-update-cmd": [
-            "@composer dump-autoload",
-            "php spark migrate -all"
-        ]
-    },
-	...
-```
-
 ## Configuration (optional)
 
 The library's default behavior can be altered by extending its config file. Copy
@@ -56,6 +42,19 @@ comments. If no config file is found in app/Config the library will use its own.
 Once the library is included all the resources are ready to go and you are ready to start
 adding settings. You may import setting templates directly into the `settings` table or
 add them manually with the CLI command `php spark settings:add`.
+
+**Settings** also comes with a database seeder for some recommended default templates. Run
+the seeder from the command line:
+	
+	php spark db:seed \\Tatter\\Settings\\Database\\Seeds\\SettingsSeeder
+
+This will add appropriately-scoped templates and default values for the following settings:
+
+> databaseTimezone, serverTimezone, timezone, siteVersion, theme, perPage, brandName, brandLogo, orgName, orgLogo, orgUrl, orgAddress, orgPhone
+
+Note that the seeder will *not* overwrite existing values so it is safe to run at any time.
+See [src/Database/Seeds/SettingsSeeder.php](src/Database/Seeds/SettingsSeeder.php) for the
+complete list with scopes, descriptions, and default values.
 
 ### Scope
 
