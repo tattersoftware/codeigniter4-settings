@@ -6,9 +6,9 @@ use Tatter\Settings\Models\SettingModel;
 
 class SettingsAdd extends BaseCommand
 {
-    protected $group       = 'Settings';
-    protected $name        = 'settings:add';
-    protected $description = "Adds a setting template to the database.";
+	protected $group       = 'Settings';
+	protected $name        = 'settings:add';
+	protected $description = "Adds a setting template to the database.";
     
 	protected $usage     = "settings:add [name] [scope] [content] [protected] [notes]";
 	protected $arguments = [
@@ -19,33 +19,43 @@ class SettingsAdd extends BaseCommand
 	];
 
 	public function run(array $params = [])
-    {
+	{
 		$settings = new SettingModel();
 		
 		// consume or prompt for a setting name
 		$name = array_shift($params);
 		if (empty($name))
+		{
 			$name = CLI::prompt('Name of the setting', null, 'required');
+		}
 		
 		// consume or prompt for the scope
 		$scope = array_shift($params);
 		if (empty($scope))
+		{
 			$scope = CLI::prompt('Scope', ['global', 'user', 'session']);
+		}
 				
 		// consume or prompt for content
 		$content = array_shift($params);
 		if (empty($content))
+		{
 			$content = CLI::prompt('Default content');
+		}
 
 		// consume or prompt for the protection status
 		$protected = array_shift($params);
 		if (empty($protected))
+		{
 			$protected = CLI::prompt('Protected?', ['y', 'n']);
+		}
 
 		// consume or prompt for summary
 		$summary = array_shift($params);
 		if (empty($summary))
+		{
 			$summary = CLI::prompt('Brief description (optional)');
+		}
 		
 		// build the row
 		$setting = [

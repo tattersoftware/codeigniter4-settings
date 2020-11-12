@@ -17,5 +17,4 @@ class SettingModel extends Model
 	protected $validationRules    = [];
 	protected $validationMessages = [];
 	protected $skipValidation     = false;
-
 }
