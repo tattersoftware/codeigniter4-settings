@@ -1,9 +1,9 @@
 <?php
 
-use CodeIgniter\Test\CIDatabaseTestCase;
+use CodeIgniter\Test\CIUnitTestCase;
 use Tatter\Settings\Settings;
 
-class ServiceTest extends CIDatabaseTestCase
+class ServiceTest extends CIUnitTestCase
 {
 	public function testServiceReturnsLibrary()
 	{
