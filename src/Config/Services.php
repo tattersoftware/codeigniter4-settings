@@ -1,21 +1,30 @@
 <?php namespace Tatter\Settings\Config;
 
 use CodeIgniter\Config\BaseService;
-use CodeIgniter\Database\ConnectionInterface;
+use CodeIgniter\Session\SessionInterface;
+use Tatter\Settings\Config\Settings as SettingsConfig;
+use Tatter\Settings\Models\SettingModel;
+use Tatter\Settings\Settings;
 
 class Services extends BaseService
 {
-    public static function settings(BaseConfig $config = null, bool $getShared = true)
-    {
-		if ($getShared):
-			return static::getSharedInstance('settings', $config);
-		endif;
+	/**
+	 * @param SettingsConfig|null $config
+	 * @param SettingModel|null $model
+	 * @param SessionInterface|null $session
+	 * @param bool $getShared
+	 */
+	public static function settings(SettingsConfig $config = null, SettingModel $model = null, SessionInterface $session = null, bool $getShared = true)
+	{
+		if ($getShared)
+		{
+			return static::getSharedInstance('settings', $model, $session, $config);
+		}
 
-		// If no config was injected then load one
-		// Prioritizes app/Config if found
-		if (empty($config))
-			$config = config('Settings');
-
-		return new \Tatter\Settings\Settings($config);
+		return new Settings(
+			$config ?? config('Settings'),
+			$model ?? model(SettingModel::class),
+			$session ?? service('session')
+		);
 	}
 }

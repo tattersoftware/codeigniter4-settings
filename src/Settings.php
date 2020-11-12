@@ -9,7 +9,7 @@
 * Description:  Lightweight settings management for CodeIgniter 4
 *
 * Requirements:
-* 	>= PHP 7.1
+* 	>= PHP 7.2
 * 	>= CodeIgniter 4.0
 *	Preconfigured, autoloaded Database
 *	`settings` and `settings_users` tables (run migrations)
@@ -33,8 +33,11 @@
 *
 ***/
 
-use CodeIgniter\Config\BaseConfig;
-use CodeIgniter\Config\Services;
+use CodeIgniter\Database\BaseBuilder;
+use CodeIgniter\Database\ConnectionInterface;
+use CodeIgniter\Session\SessionInterface;
+use Config\Services;
+use Tatter\Settings\Config\Settings as SettingsConfig;
 use Tatter\Settings\Models\SettingModel;
 use Tatter\Settings\Exceptions\SettingsException;
 
@@ -44,148 +47,220 @@ class Settings
 	/**
 	 * Our configuration instance.
 	 *
-	 * @var \Tatter\Settings\Config\Settings
+	 * @var SettingsConfig
 	 */
 	protected $config;
-
-	/**
-	 * Database connection for the `settings_users` table
-	 *
-	 * @var ConnectionInterface
-	 */
-	protected $builder;
-
-	/**
-	 * The active user session.
-	 *
-	 * @var \CodeIgniter\Session\Session
-	 */
-	protected $session;
 	
 	/**
-	 * The setting model used to fetch Settings templates.
+	 * The model for fetching templates.
 	 *
-	 * @var \Tatter\Settings\Models\SettingModel
+	 * @var SettingModel
 	 */
 	protected $model;
-		
-	// initiate library, check for existing session
-	public function __construct(BaseConfig $config, ConnectionInterface $db = null)
-	{		
-		// save configuration
-		$this->config = $config;
+	
+	/**
+	 * The Session Handler
+	 *
+	 * @var SessionInterface
+	 */
+	protected $session;
 
-		// initiate the Session library
-		$this->session = Services::session();
+	/**
+	 * Builder for the `settings_users` table, derived from $model
+	 *
+	 * @var BaseBuilder
+	 */
+	private $builder;
 		
-		// If no db connection passed in, use the default database group.
-		$db = db_connect($db);
-		$this->builder = $db->table('settings_users');
-		
-		// initiate the model
-		$this->model = new SettingModel();
+	/**
+	 * Stores dependencies
+	 *
+	 * @param SettingsConfig $config
+	 * @param SettingModel $model
+	 * @param SessionInterface $session
+	 */
+	public function __construct(SettingsConfig $config, SettingModel $model, SessionInterface $session)
+	{
+		$this->config  = $config;
+		$this->model   = $model;
+		$this->session = $session;
+
+		$this->builder = $this->model->builder('settings_users');
 	}
 	
-	// checks for a logged in user based on config
-	// returns user ID, 0 for "not logged in", -1 for CLI
+	/**
+	 * Checks for a logged in user
+	 *
+	 * @return int The user ID, 0 for "not logged in", -1 for CLI
+	 */
 	protected function sessionUserId(): int
 	{
 		if (is_cli())
+		{
 			return -1;
+		}
 		return $this->session->get($this->config->sessionUserId) ?? 0;
 	}
 	
-	// fetches the setting template from the settings table and handles errors
-	public function getTemplate(string $name)
+	/**
+	 * Fetches the setting template from the settings table and handles errors
+	 *
+	 * @param string $name
+	 *
+	 * @return object|null
+	 *
+	 * @throws SettingsException
+	 */
+	public function getTemplate(string $name): ?object
 	{
-		if (empty($name)):
-			if ($this->config->silent):
+		if (empty($name))
+		{
+			if ($this->config->silent)
+			{
 				return null;
-			else:
+			}
+			else
+			{
 				throw SettingsException::forMissingName();
-			endif;
-		endif;
+			}
+		}
 		
-		// check cache
-		if ($setting = cache("settings:templates:{$name}"))
+		// Check the cache
+		if ($setting = cache("settings-templates-{$name}"))
+		{
 			return $setting;
+		}
 		
-		// fetch from the database
+		// Query the database
 		$setting = $this->model->where('name', $name)->first();
-		if (empty($setting)):
-			if ($this->config->silent):
+		if (empty($setting))
+		{
+			if ($this->config->silent)
+			{
 				return null;
-			else:
+			}
+			else
+			{
 				throw SettingsException::forUnmatchedName($name);
-			endif;
-		endif;
+			}
+		}
 		
-		cache("settings:templates:{$name}", $setting);
+		$this->cache("settings-templates-{$name}", $setting);
 		return $setting;
 	}
 	
-	// try to cache a setting and pass it back
+	/**
+	 * Tries to cache a Setting
+	 *
+	 * @param string $key
+	 * @param mixed $content
+	 *
+	 * @return mixed
+	 */
 	protected function cache($key, $content)
 	{
 		if ($content === null)
+		{
 			return cache()->delete($key);
+		}
 
 		if ($duration = $this->config->cacheDuration)
+		{
 			cache()->save($key, $content, $duration);
+		}
+
 		return $content;
 	}
 
-	// magic wrapper for getting a setting
-    public function __get(string $name)
-    {
+	/**
+	 * Magic getter for a setting
+	 *
+	 * @param string $name
+	 *
+	 * @return mixed
+	 */
+	public function __get(string $name)
+	{
 		return $this->get($name);
-    }
+	}
 	
-	// get a setting - checks session, then user, then global
+	/**
+	 * Gets a setting - checks session, then user, then global
+	 *
+	 * @param string $name
+	 *
+	 * @return mixed|null
+	 */
 	public function get(string $name)
 	{
 		$setting = $this->getTemplate($name);
 		if (empty($setting))
+		{
 			return null;
+		}
 
 		// check for a cached version
 		$userId = $this->sessionUserId();
-		$cacheKey = "settings:contents:{$setting->name}:{$userId}";
+		$ident  = $userId ?: md5(session_id());
+		$cacheKey = "settings-contents-{$setting->name}-{$ident}";
 		$content = cache($cacheKey);
 		if ($content !== null)
+		{
 			return $content;
+		}
 		
 		// global settings cannot be overridden
 		if ($setting->scope=="global")
+		{
 			return $this->cache($cacheKey, $setting->content);
+		}
 		
 		// check if there's a setting for this session
 		$content = $this->getSession($setting);
 		if ($content!==null)
+		{
 			return $this->cache($cacheKey, $content);
+		}
 
 		// check if there's a user-defined setting
 		$content = $this->getUser($setting, $userId);
 		if ($content!==null)
+		{
 			return $this->cache($cacheKey, $content);
+		}
 
 		// fall back to template setting
 		return $this->cache($cacheKey, $setting->content);
-    }
+	}
     
-	// check if there is a $_SESSION entry
+	/**
+	 * Checks if there is a $_SESSION entry
+	 *
+	 * @param object $setting
+	 *
+	 * @return mixed|null
+	 */
 	protected function getSession($setting)
 	{
 		// prefix to avoid collision
-		return $this->session->get('settings:contents:' . $setting->name) ?? null;
+		return $this->session->get('settings-contents-' . $setting->name) ?? null;
 	}
 	
-	// checks the database for a user-defined setting
+	/**
+	 * Checks the database for a user-defined setting
+	 *
+	 * @param object $setting
+	 * @param int|null $userId
+	 *
+	 * @return mixed|null
+	 */
 	protected function getUser($setting, int $userId = null)
 	{
 		// if no user is provided try to get the current user ID
 		if (! is_numeric($userId))
+		{
 			$userId = $this->sessionUserId();
+		}
 			
 		// look for a user-defined setting
 		$result = $this->builder
@@ -194,27 +269,47 @@ class Settings
 			->limit(1)->get()->getResult();
 
 		if (empty($result))
+		{
 			return null;
+		}
 		return reset($result)->content;
 	}
 
-	// magic wrapper for changing a setting
-    public function __set(string $name, $content): bool
-    {
+	/**
+	 * Magic setter for changing a setting
+	 *
+	 * @param string $name
+	 * @param mixed|null $content
+	 *
+	 * @return bool
+	 */
+	public function __set(string $name, $content): bool
+	{
 		return $this->set($name, $content);
-    }
+	}
 
-	// change a setting, null removes
-    public function set(string $name, $content): bool
-    {
+	/**
+	 * Changes or removes a setting
+	 *
+	 * @param string $name
+	 * @param mixed|null $content Null to remove
+	 *
+	 * @return bool
+	 */
+	public function set(string $name, $content): bool
+	{
 		$setting = $this->getTemplate($name);
 		if (empty($setting))
+		{
 			return false;
+		}
 		
 		$userId = $this->sessionUserId();
-		$cacheKey = "settings:contents:{$setting->name}:{$userId}";
+		$ident  = $userId ?: md5(session_id());
+		$cacheKey = "settings-contents-{$setting->name}-{$ident}";
 		
-		switch ($setting->scope):
+		switch ($setting->scope)
+		{
 			// global scope changes the template in the settings table
 			case "global":
 				$this->setGlobal($setting, $content);
@@ -236,29 +331,41 @@ class Settings
 			// something borked
 			default:
 				return false;
-		endswitch;
+		}
 	
 		return true;
-    }
+	}
 
-	// change a global setting template (updates content in settings table)
+	/**
+	 * Changes a global setting template (updates content in settings table)
+	 *
+	 * @param object $setting
+	 * @param mixed|null $content
+	 *
+	 * @return bool|null
+	 */
 	protected function setGlobal($setting, $content = null): ?bool
 	{
 		// don't alter protected templates
-		if ($setting->protected):
-			if ($this->config->silent):
+		if ($setting->protected)
+		{
+			if ($this->config->silent)
+			{
 				return null;
-			else:
+			}
+			else
+			{
 				throw SettingsException::forProtectionViolation($setting->name);
-			endif;
-		endif;
+			}
+		}
 		
 		// check for a removal request
-		if ($content === null):
+		if ($content === null)
+		{
 			$this->model->delete($setting->id);
-			cache()->delete("settings:templates:{$setting->name}");
+			cache()->delete("settings-templates-{$setting->name}");
 			return true;
-		endif;
+		}
 		
 		// update the setting template
 		$setting->content = $content;
@@ -267,22 +374,43 @@ class Settings
 		return true;
 	}
 	
-	// change a session setting
+	/**
+	 * Changes a session setting
+	 *
+	 * @param object $setting
+	 * @param mixed|null $content
+	 *
+	 * @return bool
+	 */
 	protected function setSession($setting, $content = null): bool
 	{
 		if ($content === null)
-			$this->session->remove('settings:contents:' . $setting->name);
+		{
+			$this->session->remove('settings-contents-' . $setting->name);
+		}
 		else
-			$this->session->set('settings:contents:' . $setting->name, $content);
+		{
+			$this->session->set('settings-contents-' . $setting->name, $content);
+		}
 		return true;
 	}
 
-	// change a user setting
+	/**
+	 * Changes a user setting
+	 *
+	 * @param object $setting
+	 * @param mixed|null $content
+	 * @param int|null $userId
+	 *
+	 * @return bool
+	 */
 	protected function setUser($setting, $content = null, int $userId = null): bool
 	{
 		// if no user is provided try to get the current user ID
 		if (! is_numeric($userId))
+		{
 			$userId = $this->sessionUserId();
+		}
 			
 		// remove any existing setting
 		$this->builder
@@ -292,7 +420,9 @@ class Settings
 			
 		// if this was a removal request, we're done
 		if ($content === null)
+		{
 			return true;
+		}
 			
 		// build the row
 		$row = [
