@@ -1,5 +1,6 @@
 {
 	"name": "tatter/settings",
+	"type": "library",
 	"description": "Lightweight settings management for CodeIgniter 4",
 	"keywords": [
 		"codeigniter",
@@ -18,20 +19,37 @@
 		}
 	],
 	"require": {
-		"php" : "^7.0"
+		"php": ">=7.2"
 	},
 	"require-dev": {
-		"codeigniter4/framework": "dev-master"
+		"codeigniter4/codeigniter4": "dev-develop",
+		"tatter/tools": "^1.2"
 	},
 	"autoload": {
 		"psr-4": {
 			"Tatter\\Settings\\": "src"
 		}
 	},
+	"autoload-dev": {
+		"psr-4": {
+			"Tests\\Support\\": "tests/_support"
+		}
+	},
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/codeigniter4/codeigniter4"
+		},
+		{
+			"type": "vcs",
+			"url": "https://github.com/lonnieezell/myth-auth"
+		}
+	],
+	"minimum-stability": "dev",
+	"prefer-stable": true,
 	"scripts": {
-		"post-update-cmd": [
-			"composer dump-autoload",
-			"php spark migrate:latest -n all"
-		]
+		"analyze": "phpstan analyze",
+		"style": "phpcbf --standard=./vendor/codeigniter4/codeigniter4-standard/CodeIgniter4 tests/ src/",
+		"test": "phpunit"
 	}
 }
