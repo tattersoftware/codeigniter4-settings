@@ -126,7 +126,7 @@ class Settings
 		}
 		
 		// Check the cache
-		if ($setting = cache("settings:templates:{$name}"))
+		if ($setting = cache("settings-templates-{$name}"))
 		{
 			return $setting;
 		}
@@ -145,7 +145,7 @@ class Settings
 			}
 		}
 		
-		$this->cache("settings:templates:{$name}", $setting);
+		$this->cache("settings-templates-{$name}", $setting);
 		return $setting;
 	}
 	
@@ -202,7 +202,7 @@ class Settings
 		// check for a cached version
 		$userId = $this->sessionUserId();
 		$ident  = $userId ?: md5(session_id());
-		$cacheKey = "settings:contents:{$setting->name}:{$ident}";
+		$cacheKey = "settings-contents-{$setting->name}-{$ident}";
 		$content = cache($cacheKey);
 		if ($content !== null)
 		{
@@ -243,7 +243,7 @@ class Settings
 	protected function getSession($setting)
 	{
 		// prefix to avoid collision
-		return $this->session->get('settings:contents:' . $setting->name) ?? null;
+		return $this->session->get('settings-contents-' . $setting->name) ?? null;
 	}
 	
 	/**
@@ -306,7 +306,7 @@ class Settings
 		
 		$userId = $this->sessionUserId();
 		$ident  = $userId ?: md5(session_id());
-		$cacheKey = "settings:contents:{$setting->name}:{$ident}";
+		$cacheKey = "settings-contents-{$setting->name}-{$ident}";
 		
 		switch ($setting->scope)
 		{
@@ -363,7 +363,7 @@ class Settings
 		if ($content === null)
 		{
 			$this->model->delete($setting->id);
-			cache()->delete("settings:templates:{$setting->name}");
+			cache()->delete("settings-templates-{$setting->name}");
 			return true;
 		}
 		
@@ -386,11 +386,11 @@ class Settings
 	{
 		if ($content === null)
 		{
-			$this->session->remove('settings:contents:' . $setting->name);
+			$this->session->remove('settings-contents-' . $setting->name);
 		}
 		else
 		{
-			$this->session->set('settings:contents:' . $setting->name, $content);
+			$this->session->set('settings-contents-' . $setting->name, $content);
 		}
 		return true;
 	}
