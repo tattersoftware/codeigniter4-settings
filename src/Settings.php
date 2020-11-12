@@ -150,7 +150,8 @@ class Settings
 
 		// check for a cached version
 		$userId = $this->sessionUserId();
-		$cacheKey = "settings:contents:{$setting->name}:{$userId}";
+		$ident  = $userId ?: md5(session_id());
+		$cacheKey = "settings:contents:{$setting->name}:{$ident}";
 		$content = cache($cacheKey);
 		if ($content !== null)
 			return $content;
@@ -212,7 +213,8 @@ class Settings
 			return false;
 		
 		$userId = $this->sessionUserId();
-		$cacheKey = "settings:contents:{$setting->name}:{$userId}";
+		$ident  = $userId ?: md5(session_id());
+		$cacheKey = "settings:contents:{$setting->name}:{$ident}";
 		
 		switch ($setting->scope):
 			// global scope changes the template in the settings table
