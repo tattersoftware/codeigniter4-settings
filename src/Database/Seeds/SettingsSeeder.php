@@ -37,11 +37,18 @@ class SettingsSeeder extends \CodeIgniter\Database\Seeder
 				'protected'  => 1,
 			],
 			[
-				'name'       => 'currency',
+				'name'       => 'currencyUnit',
 				'scope'      => 'global',
 				'content'    => 'USD',
 				'protected'  => 1,
 				'summary'    => 'Currency format for number helper',
+			],
+			[
+				'name'       => 'currencyScale',
+				'scope'      => 'global',
+				'content'    => '100',
+				'protected'  => 1,
+				'summary'    => 'Conversion rate to the fractional monetary unit',
 			],
 			[
 				'name'       => 'theme',
