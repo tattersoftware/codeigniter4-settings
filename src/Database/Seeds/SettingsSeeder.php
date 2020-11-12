@@ -9,6 +9,13 @@ class SettingsSeeder extends \CodeIgniter\Database\Seeder
 		// Define default project setting templates
 		$rows = [
 			[
+				'name'       => 'siteVersion',
+				'scope'      => 'global',
+				'content'    => '1.0.0',
+				'summary'    => 'Current version of this project',
+				'protected'  => 1,
+			],
+			[
 				'name'       => 'databaseTimezone',
 				'scope'      => 'global',
 				'content'    => 'America/New_York',
@@ -30,11 +37,11 @@ class SettingsSeeder extends \CodeIgniter\Database\Seeder
 				'protected'  => 1,
 			],
 			[
-				'name'       => 'siteVersion',
+				'name'       => 'currency',
 				'scope'      => 'global',
-				'content'    => '1.0.0',
-				'summary'    => 'Current version of this project',
+				'content'    => 'USD',
 				'protected'  => 1,
+				'summary'    => 'Currency format for number helper',
 			],
 			[
 				'name'       => 'theme',
