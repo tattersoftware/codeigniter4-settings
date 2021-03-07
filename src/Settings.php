@@ -281,11 +281,11 @@ class Settings
 	 * @param string $name
 	 * @param mixed|null $content
 	 *
-	 * @return bool
+	 * @return void
 	 */
-	public function __set(string $name, $content): bool
+	public function __set(string $name, $content): void
 	{
-		return $this->set($name, $content);
+		$this->set($name, $content);
 	}
 
 	/**
