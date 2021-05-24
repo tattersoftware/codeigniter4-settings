@@ -2,6 +2,7 @@
 
 use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
+use Tatter\Settings\Models\SettingModel;
 
 class SettingsList extends BaseCommand
 {
@@ -11,19 +12,17 @@ class SettingsList extends BaseCommand
 
 	public function run(array $params)
 	{
-		$db = db_connect();
-		
 		CLI::write(" SETTING TEMPLATES ", 'white', 'black');
 		
 		// get all settings
-		$rows = $db->table('settings')->select('name, scope, content, summary, protected, created_at')
+		$rows = model(SettingModel::class)->builder()->select('name, scope, content, summary, protected, created_at')
 			->where('deleted_at IS NULL')
 			->orderBy('name', 'asc')
 			->get()->getResultArray();
 
 		if (empty($rows))
 		{
-			CLI::write( CLI::color("No settings templates.", 'yellow') );
+			CLI::write('No settings templates.', 'yellow');
 		}
 		else
 		{

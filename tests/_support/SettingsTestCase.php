@@ -1,9 +1,13 @@
 <?php namespace Tests\Support;
 
-use CodeIgniter\Test\CIDatabaseTestCase;
+use CodeIgniter\Test\CIUnitTestCase;
+use CodeIgniter\Test\DatabaseTestTrait;
+use Tatter\Settings\Database\Seeds\SettingSeeder;
 
-class SettingsTestCase extends CIDatabaseTestCase
+class SettingsTestCase extends CIUnitTestCase
 {
+	use DatabaseTestTrait;
+
 	/**
 	 * @var boolean
 	 */
@@ -17,5 +21,5 @@ class SettingsTestCase extends CIDatabaseTestCase
 	/**
 	 * @var string|array
 	 */
-	protected $seed = 'Tatter\Settings\Database\Seeds\SettingSeeder';
+	protected $seed = SettingSeeder::class;
 }

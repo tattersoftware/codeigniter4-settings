@@ -118,15 +118,12 @@ class SettingSeeder extends Seeder
 		];
 		
 		// Check for and create project setting templates
-		$settings = new SettingModel();
 		foreach ($rows as $row)
 		{
-			$setting = $settings->where('name', $row['name'])->first();
-			
-			if (empty($setting))
+			if (! $setting = model(SettingModel::class)->where('name', $row['name'])->first())
 			{
-				// No setting - add the row
-				$settings->insert($row);
+				// No match - add the row
+				model(SettingModel::class)->insert($row);
 			}
 		}
 	}

@@ -1,8 +1,19 @@
-<?php namespace Tatter\Settings\Config;
+<?php namespace Config;
+
+/***
+*
+* This file contains example values to alter default library behavior.
+* Recommended usage:
+*	1. Copy the file to app/Config/Settings.php
+*	2. Change any values
+*	3. Remove any lines to fallback to defaults
+*
+***/
 
 use CodeIgniter\Config\BaseConfig;
+use Tatter\Settings\Config\Settings as BaseSettings;
 
-class Settings extends BaseConfig
+class Settings extends BaseSettings;
 {
 	/**
 	 * A key in $_SESSION that contains
