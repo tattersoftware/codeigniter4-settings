@@ -1,11 +1,15 @@
 # Tatter\Settings
 Lightweight settings management for CodeIgniter 4
 
+[![](https://github.com/tattersoftware/codeigniter4-settings/workflows/PHPUnit/badge.svg)](https://github.com/tattersoftware/codeigniter4-settings/actions?query=workflow%3A%22PHPUnit)
+[![](https://github.com/tattersoftware/codeigniter4-settings/workflows/PHPStan/badge.svg)](https://github.com/tattersoftware/codeigniter4-settings/actions?query=workflow%3A%22PHPStan)
+[![Coverage Status](https://coveralls.io/repos/github/tattersoftware/codeigniter4-settings/badge.svg?branch=develop)](https://coveralls.io/github/tattersoftware/codeigniter4-settings?branch=develop)
+
 ## Quick Start
 
 1. Install with Composer: `> composer require tatter/settings`
 2. Update the database: `> php spark migrate -all`
-3. Add settings: `> php spark settings:add timezone user America/New_York`
+3. Use `spark` to create templates: `> php spark settings:add timezone user America/New_York`
 4. Load the service: `$settings = service('settings');`
 5. Get/set settings per user:
 ```
@@ -46,7 +50,7 @@ add them manually with the CLI command `php spark settings:add`.
 **Settings** also comes with a database seeder for some recommended default templates. Run
 the seeder from the command line:
 	
-	php spark db:seed \\Tatter\\Settings\\Database\\Seeds\\SettingsSeeder
+	php spark db:seed "Tatter\Settings\Database\Seeds\SettingsSeeder"
 
 This will add appropriately-scoped templates and default values for the following settings:
 

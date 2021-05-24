@@ -6,16 +6,16 @@ class Migration_create_table_settings extends Migration
 {
 	public function up()
 	{
-		// settings
+		// Settings
 		$fields = [
-			'name'         => ['type' => 'VARCHAR', 'constraint' => 63, 'unique' => true],
-			'scope'        => ['type' => 'VARCHAR', 'constraint' => 15],
-			'content'      => ['type' => 'VARCHAR', 'constraint' => 255],
-			'summary'      => ['type' => 'VARCHAR', 'constraint' => 255],
-			'protected'    => ['type' => 'BOOLEAN', 'default' => 1],
-			'created_at'   => ['type' => 'DATETIME', 'null' => true],
-			'updated_at'   => ['type' => 'DATETIME', 'null' => true],
-			'deleted_at'   => ['type' => 'DATETIME', 'null' => true],
+			'name'       => ['type' => 'varchar', 'constraint' => 63, 'unique' => true],
+			'scope'      => ['type' => 'varchar', 'constraint' => 15],
+			'summary'    => ['type' => 'varchar', 'constraint' => 255, 'default' => ''],
+			'content'    => ['type' => 'varchar', 'constraint' => 255, 'default' => ''],
+			'protected'  => ['type' => 'boolean', 'default' => 1],
+			'created_at' => ['type' => 'datetime', 'null' => true],
+			'updated_at' => ['type' => 'datetime', 'null' => true],
+			'deleted_at' => ['type' => 'datetime', 'null' => true],
 		];
 		
 		$this->forge->addField('id');
@@ -25,12 +25,12 @@ class Migration_create_table_settings extends Migration
 		
 		$this->forge->createTable('settings');
 		
-		// users override settings
+		// Settings<->Users
 		$fields = [
-			'setting_id'  => ['type' => 'INT', 'unsigned' => true, 'null' => true],
-			'user_id'     => ['type' => 'INT', 'unsigned' => true, 'null' => true],
-			'content'      => ['type' => 'VARCHAR', 'constraint' => 255],
-			'created_at'  => ['type' => 'DATETIME', 'null' => true],
+			'setting_id' => ['type' => 'int', 'unsigned' => true],
+			'user_id'    => ['type' => 'int', 'unsigned' => true],
+			'content'    => ['type' => 'varchar', 'constraint' => 255, 'default' => ''],
+			'created_at' => ['type' => 'datetime', 'null' => true],
 		];
 		
 		$this->forge->addField('id');

@@ -2,6 +2,7 @@
 
 use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
+use Exception;
 use Tatter\Settings\Models\SettingModel;
 
 class SettingsAdd extends BaseCommand
@@ -12,10 +13,10 @@ class SettingsAdd extends BaseCommand
     
 	protected $usage     = "settings:add [name] [scope] [content] [protected] [notes]";
 	protected $arguments = [
-		'name'       => "The name of the setting (e.g. 'timezone')",
-		'scope'      => "The scope of the setting ('session', 'user', or 'global') *See docs*",
-		'content'    => "The default/global value of the setting",
-		'protected'  => "Whether to prevent template from being changed or deleted; 0 or 1",
+		'name'       => 'The name of the setting (e.g. "timezone")',
+		'scope'      => 'The scope of the setting ("session", "user", or "global") *See docs*',
+		'content'    => 'The default/global value of the setting',
+		'protected'  => 'Whether to prevent template from being changed or deleted; 0 or 1',
 	];
 
 	public function run(array $params = [])
@@ -62,7 +63,7 @@ class SettingsAdd extends BaseCommand
 			'name'       => $name,
 			'scope'      => $scope,
 			'content'    => $content,
-			'protected'  => ($protected=='y'),
+			'protected'  => $protected == 'y',
 			'summary'    => $summary,
 		];
 				
@@ -70,7 +71,7 @@ class SettingsAdd extends BaseCommand
 		{
 			$settings->save($setting);
 		}
-		catch (\Exception $e)
+		catch (Exception $e)
 		{
 			$this->showError($e);
 		}
