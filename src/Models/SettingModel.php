@@ -83,7 +83,7 @@ class SettingModel extends Model
 		{
 			// ... then have to load from the database instead
 			$templates = $this->builder()
-				->select(['name', 'datatype', 'content', 'protected'])
+				->select(['id', 'name', 'datatype', 'content', 'protected'])
 				->get()->getResultArray();
 
 			if (isset($ttl))
@@ -120,7 +120,7 @@ class SettingModel extends Model
 		self::$overrides[$userId] = [];
 		foreach ($this->builder('settings_users')->where('user_id', $userId)->get()->getResultArray() as $override)
 		{
-			self::$overrides[$userId][$override['setting_id']] = $override['contents'];
+			self::$overrides[$userId][$override['setting_id']] = $override['content'];
 		}
 
 		return self::$overrides[$userId];
@@ -135,7 +135,7 @@ class SettingModel extends Model
 	 *
 	 * @return void
 	 */
-	protected function setOverride(int $settingId, int $userId, $content): void
+	public function setOverride(int $settingId, int $userId, $content): void
 	{
 		$builder = $this->builder('settings_users');
 

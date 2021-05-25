@@ -148,8 +148,8 @@ class Settings
 	{
 		self::validate($name);
 
-		// If there is not a template or there is no user then set session and quit
-		if (! ($setting = $this->getTemplate($name)) || ! function_exists('user_id') || null === $userId = user_id())
+		// If there is not a template then set session and quit
+		if (! ($setting = $this->getTemplate($name)))
 		{
 			$this->setSession($name, $content);
 
@@ -164,8 +164,13 @@ class Settings
 			return $this;
 		}
 
+		// If there is a user then create an override
+		if (function_exists('user_id') && null !== $userId = user_id())
+		{
+			model(SettingModel::class)->setOverride($setting->id, $userId, $content);
+		}
+
 		// Update the database and set the session
-		model(SettingModel::class)->setOverride($setting->id, $userId, $content);
 		$this->setSession($name, $content);
 
 		return $this;

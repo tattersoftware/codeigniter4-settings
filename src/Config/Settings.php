@@ -11,5 +11,5 @@ class Settings extends BaseConfig
 	 *
 	 * @var int|null
 	 */
-	public $ttl = HOUR;
+	public $ttl = 5 * MINUTE;
 }
