@@ -23,7 +23,7 @@ class Settings
 	 *
 	 * @throws InvalidArgumentException
 	 */
-	private static function validate(string $name): string
+	public static function validate(string $name): string
 	{
 		BaseHandler::validateKey($name);
 

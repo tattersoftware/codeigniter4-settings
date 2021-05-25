@@ -124,7 +124,7 @@ class SettingSeeder extends Seeder
 				// No match - add the row
 				if (! model(SettingModel::class)->allowCallbacks(false)->insert($row))
 				{
-					throw new RuntimeException(implode('. ', model(SettingModel::class)->errors()));
+					throw new RuntimeException(implode('. ', model(SettingModel::class)->errors())); // @codeCoverageIgnore
 				}
 			}
 		}

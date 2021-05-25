@@ -7,7 +7,7 @@ use Tatter\Settings\Models\SettingModel;
 use Tatter\Settings\Settings;
 use Tests\Support\SettingsTestCase;
 
-class LibraryTest extends SettingsTestCase
+final class LibraryTest extends SettingsTestCase
 {
 	use AuthTestTrait, DatabaseTestTrait;
 
@@ -19,6 +19,7 @@ class LibraryTest extends SettingsTestCase
 		parent::tearDown();
 
 		$this->resetAuthServices();
+		model(SettingModel::class)->clearTemplates();
 	}
 
 	public function testInvalidNameThrowsException()
@@ -149,15 +150,30 @@ class LibraryTest extends SettingsTestCase
 	{
 		$user     = $this->createAuthUser();
 		$settings = new Settings();
-		$setting  = $settings->getTemplate('theme');
-		$result   = $settings->set('theme', 88);
+		$setting  = $settings->getTemplate('timezone');
+		$result   = $settings->set('timezone', 'foobar/bam');
 
-		$this->assertSame(88, $_SESSION['settings-theme']);
+		$this->assertSame('foobar/bam', $_SESSION['settings-timezone']);
 		$this->seeInDatabase('settings_users', [
 			'setting_id' => $setting->id,
 			'user_id'    => $user->id,
-			'content'    => 88,
+			'content'    => 'foobar/bam',
 		]);
+	}
+
+	public function testStoreOverrides()
+	{
+		$user     = $this->createAuthUser();
+		$settings = new Settings();
+		$result   = $settings->set('theme', 99);
+
+		// Remove records from the cache and database so
+		// we are certain this is coming from the model storage
+		model(SettingModel::class)->builder('settings_users')->truncate();
+		unset($_SESSION['settings-theme']);
+		cache()->clean();
+
+		$this->assertSame(99, $settings->theme);
 	}
 
 	public function testMagicSet()

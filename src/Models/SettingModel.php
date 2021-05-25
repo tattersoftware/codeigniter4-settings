@@ -151,6 +151,13 @@ class SettingModel extends Model
 			'content'    => $content,
 			'created_at' => Time::now()->toDateTimeString(),
 		]);
+
+		if (! isset(self::$overrides[$userId]))
+		{
+			self::$overrides[$userId] = [];
+		}
+
+		self::$overrides[$userId][$settingId] = $content;
 	}
 
 	/**

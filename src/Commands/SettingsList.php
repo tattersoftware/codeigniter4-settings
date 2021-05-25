@@ -15,7 +15,7 @@ class SettingsList extends BaseCommand
 		CLI::write(" SETTING TEMPLATES ", 'white', 'black');
 		
 		// get all settings
-		$rows = model(SettingModel::class)->builder()->select('name, scope, content, summary, protected, created_at')
+		$rows = model(SettingModel::class)->builder()->select('name, summary, content, protected, created_at')
 			->where('deleted_at IS NULL')
 			->orderBy('name', 'asc')
 			->get()->getResultArray();
@@ -26,7 +26,7 @@ class SettingsList extends BaseCommand
 		}
 		else
 		{
-			$thead = ['Name', 'Scope', 'Content', 'Notes', 'Protected?', 'Created'];
+			$thead = ['Name', 'Summary', 'Content', 'Protected?', 'Created'];
 			CLI::table($rows, $thead);
 		}
 	}
