@@ -1,6 +1,7 @@
 <?php namespace Tatter\Settings\Database\Seeds;
 
 use CodeIgniter\Database\Seeder;
+use RuntimeException;
 use Tatter\Settings\Models\SettingModel;
 
 class SettingSeeder extends Seeder

@@ -13,7 +13,7 @@ final class CommandsTest extends SettingsTestCase
 	use DatabaseTestTrait;
 
 	/**
-	 * @var string
+	 * @var resource
 	 */
 	private $streamFilter;
 

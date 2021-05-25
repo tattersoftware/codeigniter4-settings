@@ -14,6 +14,7 @@ parameters:
 		- CodeIgniter\Entity
 		- CodeIgniter\Entity\Entity
 		- Faker\Generator
+		- Tatter\Settings\Settings
 	scanDirectories:
 		- vendor/codeigniter4/codeigniter4/system/Helpers
 		- vendor/myth/auth/src/Helpers
