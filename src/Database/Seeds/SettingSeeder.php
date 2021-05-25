@@ -1,6 +1,7 @@
 <?php namespace Tatter\Settings\Database\Seeds;
 
 use CodeIgniter\Database\Seeder;
+use RuntimeException;
 use Tatter\Settings\Models\SettingModel;
 
 class SettingSeeder extends Seeder
@@ -11,110 +12,109 @@ class SettingSeeder extends Seeder
 		$rows = [
 			[
 				'name'       => 'siteVersion',
-				'scope'      => 'global',
-				'content'    => '1.0.0',
+				'datatype'   => 'string',
 				'summary'    => 'Current version of this project',
-				'protected'  => 1,
-			],
-			[
-				'name'       => 'databaseTimezone',
-				'scope'      => 'global',
-				'content'    => 'America/New_York',
-				'summary'    => 'Timezone for the database server(s)',
-				'protected'  => 1,
-			],
-			[
-				'name'       => 'serverTimezone',
-				'scope'      => 'global',
-				'content'    => 'America/New_York',
-				'summary'    => 'Timezone for the web server(s)',
-				'protected'  => 1,
-			],
-			[
-				'name'       => 'timezone',
-				'scope'      => 'user',
-				'content'    => 'America/New_York',
-				'summary'    => 'Timezone for the user',
-				'protected'  => 1,
-			],
-			[
-				'name'       => 'currencyUnit',
-				'scope'      => 'global',
-				'content'    => 'USD',
-				'protected'  => 1,
-				'summary'    => 'Currency format for number helper',
-			],
-			[
-				'name'       => 'currencyScale',
-				'scope'      => 'global',
-				'content'    => '100',
-				'protected'  => 1,
-				'summary'    => 'Conversion rate to the fractional monetary unit',
-			],
-			[
-				'name'       => 'theme',
-				'scope'      => 'user',
-				'content'    => '1',
-				'protected'  => 0,
-				'summary'    => 'Site display theme',
-			],
-			[
-				'name'       => 'perPage',
-				'scope'      => 'user',
-				'content'    => '10',
-				'summary'    => 'Number of items to show per page',
+				'content'    => '1.0.0',
 				'protected'  => 1,
 			],
 			[
 				'name'       => 'brandName',
-				'scope'      => 'global',
-				'content'    => 'Bluesmith',
-				'protected'  => 1,
+				'datatype'   => 'string',
 				'summary'    => 'Brand name for this project',
+				'content'    => 'Brand',
+				'protected'  => 1,
 			],
 			[
 				'name'       => 'brandLogo',
-				'scope'      => 'global',
+				'datatype'   => 'string',
+				'summary'    => 'Brand logo for this project',
 				'content'    => '/assets/images/logo.png',
 				'protected'  => 1,
-				'summary'    => 'Brand logo for this project',
 			],
 			[
 				'name'       => 'orgName',
-				'scope'      => 'global',
+				'datatype'   => 'string',
+				'summary'    => 'Your organization name',
 				'content'    => 'Organization',
 				'protected'  => 1,
-				'summary'    => 'Your organization name',
 			],
 			[
 				'name'       => 'orgLogo',
-				'scope'      => 'global',
+				'datatype'   => 'string',
+				'summary'    => 'Your organization logo',
 				'content'    => '/assets/images/logo.png',
 				'protected'  => 1,
-				'summary'    => 'Your organization logo',
 			],
 			[
 				'name'       => 'orgUrl',
-				'scope'      => 'global',
+				'datatype'   => 'uri',
+				'summary'    => 'Your organization URL',
 				'content'    => 'https://example.com',
 				'protected'  => 1,
-				'summary'    => 'Your organization URL',
 			],
 			[
 				'name'       => 'orgAddress',
-				'scope'      => 'global',
+				'datatype'   => 'string',
+				'summary'    => 'Your organization address',
 				'content'    => '4141 Postmark Dr  Anchorage, AK',
 				'protected'  => 1,
-				'summary'    => 'Your organization address',
 			],
 			[
 				'name'       => 'orgPhone',
-				'scope'      => 'global',
+				'datatype'   => 'string',
+				'summary'    => 'Your organization phone',
 				'content'    => '(951) 262-3062',
 				'protected'  => 1,
-				'summary'    => 'Your organization phone',
 			],
-			
+			[
+				'name'       => 'currencyUnit',
+				'datatype'   => 'string',
+				'summary'    => 'Currency format for number helper',
+				'content'    => 'USD',
+				'protected'  => 1,
+			],
+			[
+				'name'       => 'currencyScale',
+				'datatype'   => 'int',
+				'summary'    => 'Conversion rate to the fractional monetary unit',
+				'content'    => '100',
+				'protected'  => 1,
+			],
+			[
+				'name'       => 'databaseTimezone',
+				'datatype'   => 'string',
+				'summary'    => 'Timezone for the database server(s)',
+				'content'    => 'America/New_York',
+				'protected'  => 1,
+			],
+			[
+				'name'       => 'serverTimezone',
+				'datatype'   => 'string',
+				'summary'    => 'Timezone for the web server(s)',
+				'content'    => 'America/New_York',
+				'protected'  => 1,
+			],
+			[
+				'name'       => 'timezone',
+				'datatype'   => 'string',
+				'summary'    => 'Timezone for the user',
+				'content'    => 'America/New_York',
+				'protected'  => 0,
+			],
+			[
+				'name'       => 'theme',
+				'datatype'   => 'int',
+				'summary'    => 'Site display theme',
+				'content'    => '1',
+				'protected'  => 0,
+			],
+			[
+				'name'       => 'perPage',
+				'datatype'   => 'int',
+				'summary'    => 'Number of items to show per page',
+				'content'    => '10',
+				'protected'  => 0,
+			],			
 		];
 		
 		// Check for and create project setting templates
@@ -123,7 +123,10 @@ class SettingSeeder extends Seeder
 			if (! $setting = model(SettingModel::class)->where('name', $row['name'])->first())
 			{
 				// No match - add the row
-				model(SettingModel::class)->insert($row);
+				if (! model(SettingModel::class)->allowCallbacks(false)->insert($row))
+				{
+					throw new RuntimeException(implode('. ', model(SettingModel::class)->errors())); // @codeCoverageIgnore
+				}
 			}
 		}
 	}

@@ -3,6 +3,7 @@
 use CodeIgniter\Test\CIUnitTestCase;
 use CodeIgniter\Test\DatabaseTestTrait;
 use Tatter\Settings\Database\Seeds\SettingSeeder;
+use Tatter\Settings\Models\SettingModel;
 
 class SettingsTestCase extends CIUnitTestCase
 {
@@ -22,4 +23,21 @@ class SettingsTestCase extends CIUnitTestCase
 	 * @var string|array
 	 */
 	protected $seed = SettingSeeder::class;
+
+	/**
+	 * Initializes required helpers.
+	 */
+	public static function setUpBeforeClass(): void
+	{
+		parent::setUpBeforeClass();
+
+		helper(['auth']);
+	}
+
+	protected function setUp(): void
+	{
+		parent::setUp();
+
+		model(SettingModel::class)->clearTemplates();
+	}
 }
