@@ -19,10 +19,13 @@
 		}
 	],
 	"require": {
-		"php": "^7.3 || ^8.0"
+		"php": "^7.3 || ^8.0",
+		"codeigniter4/authentication-implementation": "1.0",
+		"tatter/users": "^1.0"
 	},
 	"require-dev": {
 		"codeigniter4/codeigniter4": "dev-develop",
+		"myth/auth": "dev-develop",
 		"tatter/tools": "^1.8"
 	},
 	"autoload": {

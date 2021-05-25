@@ -9,7 +9,7 @@ class Migration_create_table_settings extends Migration
 		// Settings
 		$fields = [
 			'name'       => ['type' => 'varchar', 'constraint' => 63, 'unique' => true],
-			'scope'      => ['type' => 'varchar', 'constraint' => 15],
+			'scope'      => ['type' => 'varchar', 'constraint' => 15, 'default' => ''],
 			'summary'    => ['type' => 'varchar', 'constraint' => 255, 'default' => ''],
 			'content'    => ['type' => 'varchar', 'constraint' => 255, 'default' => ''],
 			'protected'  => ['type' => 'boolean', 'default' => 1],
