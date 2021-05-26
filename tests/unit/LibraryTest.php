@@ -132,8 +132,8 @@ final class LibraryTest extends SettingsTestCase
 
 		$result = $settings->set('serverTimezone', 'Australia/Darwin');
 
-		$this->assertSame('America/New_York', $settings->serverTimezone);
-		$this->assertSame('America/New_York', $_SESSION['settings-serverTimezone']);
+		$this->assertSame('UTC', $settings->serverTimezone);
+		$this->assertSame('UTC', $_SESSION['settings-serverTimezone']);
 	}
 
 	public function testSetNoUser()
@@ -183,5 +183,21 @@ final class LibraryTest extends SettingsTestCase
 		$result = $settings->winnie = 'pooh';
 
 		$this->assertSame('pooh', $settings->get('winnie'));
+	}
+
+	public function testConfigMagicGet()
+	{
+		$this->assertSame('Organization', config('Settings')->orgName);
+
+		// Ignores missing templates
+		$this->assertNull(config('Settings')->anomander);
+	}
+
+	public function testConfigMagicGetIgnoresOverrides()
+	{
+		$user     = $this->createAuthUser();
+		service('settings')->set('perPage', 1000000);
+
+		$this->assertSame(10, config('Settings')->perPage);
 	}
 }
