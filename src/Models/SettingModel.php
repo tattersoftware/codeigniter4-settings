@@ -76,7 +76,7 @@ class SettingModel extends Model
 			return self::$templates;
 		}
 
-		$ttl = config('Settings')->ttl;
+		$ttl = config('Cache')->ttl ?? 5 * MINUTE;
 
 		// If caching is disabled or no cache is matched...
 		if (is_null($ttl) || null === $templates = cache('settings-templates'))

@@ -84,14 +84,14 @@ class SettingSeeder extends Seeder
 				'name'       => 'databaseTimezone',
 				'datatype'   => 'string',
 				'summary'    => 'Timezone for the database server(s)',
-				'content'    => 'America/New_York',
+				'content'    => 'UTC',
 				'protected'  => 1,
 			],
 			[
 				'name'       => 'serverTimezone',
 				'datatype'   => 'string',
 				'summary'    => 'Timezone for the web server(s)',
-				'content'    => 'America/New_York',
+				'content'    => 'UTC',
 				'protected'  => 1,
 			],
 			[
@@ -114,9 +114,9 @@ class SettingSeeder extends Seeder
 				'summary'    => 'Number of items to show per page',
 				'content'    => '10',
 				'protected'  => 0,
-			],			
+			],
 		];
-		
+
 		// Check for and create project setting templates
 		foreach ($rows as $row)
 		{
