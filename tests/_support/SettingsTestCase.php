@@ -17,7 +17,7 @@ class SettingsTestCase extends CIUnitTestCase
 	/**
 	 * @var string|array|null
 	 */
-    protected $namespace = null;
+	protected $namespace = null;
 
 	/**
 	 * @var string|array
