@@ -10,12 +10,11 @@ Lightweight settings management for CodeIgniter 4
 1. Install with Composer: `> composer require tatter/settings`
 2. Update the database: `> php spark migrate -all`
 3. Use `spark` to create templates: `> php spark settings:add timezone user America/New_York`
-4. Load the service: `$settings = service('settings');`
-5. Get/set settings per user:
+4. Use the service to access user settings:
 ```
-$settings->timezone = $_POST['timezone_preference'];
+service('settings')->timezone = $_POST['timezone_preference'];
 ...
-$userTimezone = $settings->timezone;
+$userTimezone = service('settings')->timezone;
 ```
 
 ## Features
@@ -35,12 +34,6 @@ Once the files are downloaded and included in the autoload, run any library migr
 to ensure the database is setup correctly:
 * `> php spark migrate -all`
 
-## Configuration (optional)
-
-The library's default behavior can be altered by extending its config file. Copy
-**Settings.php** to **app/Config/** and follow the instructions in the
-comments. If no config file is found in app/Config the library will use its own.
-
 ## Usage
 
 Once the library is included all the resources are ready to go and you are ready to start
@@ -54,38 +47,67 @@ the seeder from the command line:
 
 This will add appropriately-scoped templates and default values for the following settings:
 
-> databaseTimezone, serverTimezone, timezone, siteVersion, theme, perPage, brandName, brandLogo, orgName, orgLogo, orgUrl, orgAddress, orgPhone
+| Name             | Description                                     | Data Type | Default Value                   | Protected |
+| ---------------- | ----------------------------------------------- | --------- | ------------------------------- | --------- |
+| siteVersion      | Current version of this project                 | string    | 1.0.0                           | Yes       |
+| brandName        | Brand name for this project                     | string    | Brand                           | Yes       |
+| brandLogo        | Brand logo for this project                     | string    | /assets/images/logo.png         | Yes       |
+| orgName          | Your organization name                          | string    | Organization                    | Yes       |
+| orgLogo          | Your organization logo                          | string    | /assets/images/logo.png         | Yes       |
+| orgUrl           | Your organization URL                           | uri       | https://example.com             | Yes       |
+| orgAddress       | Your organization address                       | string    | 4141 Postmark Dr  Anchorage, AK | Yes       |
+| orgPhone         | Your organization phone                         | string    | (951) 262-3062                  | Yes       |
+| currencyUnit     | Currency format for number helper               | string    | USD                             | Yes       |
+| currencyScale    | Conversion rate to the fractional monetary unit | int       | 100                             | Yes       |
+| databaseTimezone | Timezone for the database server(s              | string    | UTC                             | Yes       |
+| serverTimezone   | Timezone for the web server(s)                  | string    | UTC                             | Yes       |
+| timezone         | Timezone for the user                           | string    | America/New_York                | No        |
+| theme            | Site display theme                              | int       | 1                               | No        |
+| perPage          | Number of items to show per page                | int       | 10                              | No        |
 
-Note that the seeder will *not* overwrite existing values so it is safe to run at any time.
-See [src/Database/Seeds/SettingsSeeder.php](src/Database/Seeds/SettingsSeeder.php) for the
-complete list with scopes, descriptions, and default values.
+*Warning: This list is subject to change between major versions.*
 
-### Scope
+Note that the seeder will not overwrite existing values so it is safe to re-run at any time.
+See also [src/Database/Seeds/SettingsSeeder.php](src/Database/Seeds/SettingsSeeder.php).
 
-Settings take one of three scopes: session, user, global.
-* Global settings are the same for every user and provide a dynamic way to set application-wide values
-* User settings start with a default template value but each user may make their own default that persists across sessions
-* Session settings start with a default template value and may be changed by a user but revert for each new session
+### Setting Scope
+
+``Settings`` come in three modes: global, user, and dynamic.
+* Global settings are the same for every user and provide project owners to set application-wide values; set `protected` to `1`
+* User settings start with a template value but each user may make their own value that persists across sessions; set `protected` to `0`
+* Dynamic settings have no template but can be created and returned on-the-fly; they only persists for the current session.
 
 Examples:
-```
-+---------------+---------+------------------+----------------------------------------------+------------+
+
 | Name          | Scope   | Content          | Notes                                        | Protected? |
-+---------------+---------+------------------+----------------------------------------------+------------+
-| latestRelease | global  | 0.7.6            | Git-style tag of latest code release         | 0          |
-| perPage       | user    | 10               | Default number of items to show per page     | 1          |
-| timezone      | user    | America/New_York | Local timezone to use across the application | 1          |
-| jobsSearch    | session |                  | User's most recent search term for jobs      | 1          |
-+---------------+---------+------------------+----------------------------------------------+------------+
-```
+|-------------- | ------- | ---------------- | -------------------------------------------- | ---------- |
+| latestRelease | Global  | 0.7.6            | Git-style tag of latest code release         | 1          |
+| timezone      | User    | America/New_York | Local timezone to use across the application | 0          |
+| perPage       | User    | 10               | Default number of items to show per page     | 0          |
+| jobsSearch    | Dynamic | backend php      | User's most recent search term for jobs      | n/a        |
+
 
 * When you release a new version of your software:
 
-`$settings->latestRelease = $newVersion;`
+	$settings->latestRelease = $newVersion;
 
 * When a user searches a list of jobs:
 
-```
-$settings->jobsSearch = $_POST['searchTerm'];
-$data['jobs'] = $jobModel->paginate($settings->perPage);
-```
+	$settings->jobsSearch = $_POST['searchTerm'];
+	$data['jobs'] = $jobModel->paginate($settings->perPage);
+e/Seeds/SettingsSeeder.php](src/Database/Seeds/SettingsSeeder.php).
+
+### Magic Config
+
+``Settings`` comes with a magic configuration file that allows direct access to template values. This is a convenient
+way to access the library in a traditional framework fashion:
+
+	$logo = config('Settings')->projectLogo;
+
+Note that unlike the Service or Library values from the magic config are directly from the template default and are not
+affected by user overrides:
+
+	service('settings')->set('perPage', 20);
+
+	echo service('settings')->perPage; // 20
+	echo config('Settings')->perPage; // 10
