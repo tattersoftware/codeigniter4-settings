@@ -170,7 +170,7 @@ class Settings
 			model(SettingModel::class)->setOverride($setting->id, $userId, $content);
 		}
 
-		// Update the database and set the session
+		// Update the session
 		$this->setSession($name, $content);
 
 		return $this;
