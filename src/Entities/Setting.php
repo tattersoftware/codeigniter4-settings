@@ -30,4 +30,23 @@ class Setting extends Entity
 
 		parent::__construct($data);
 	}
+
+	/**
+	 * Ensures correct casts
+	 * for array datatypes.
+	 *
+	 * @param string $value
+	 */
+	protected function setContent(string $value)
+	{
+		// If the setting content is already encoded (i.e., a string) when
+		// writing or reading from the database, the 'set' cast must be skipped.
+		if(in_array($this->casts['content'], ['array', 'json-array']) && is_string($value))
+		{
+			$value = $this->castAs($value, 'content');
+		}
+
+		$this->attributes['content'] = $value;
+	}
+
 }

@@ -23,6 +23,27 @@ final class EntityTest extends SettingsTestCase
 		$this->assertSame(12, $setting->content);
 	}
 
+	/**
+	 * Test setting content from an encoded array and
+	 * reading the array object from the same string.
+	 */
+	public function testArrayContentCastsToDatatype()
+	{
+		$setting = new Setting([
+			'datatype' => 'json-array',
+			'content'  => '{"firstIndex": ["firstValue"], "secondIndex": ["secondValue"]}',
+		]);
+
+		$expected = [
+			'firstIndex'=>'firstValue',
+			'secondIndex'=>'secondValue',
+		];
+
+		$this->assertSame($expected, $setting->content);
+	}
+
+
+
 	public function testFaked()
 	{
 		$setting = fake(SettingModel::class, null, false);
