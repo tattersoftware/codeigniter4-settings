@@ -63,6 +63,32 @@ class SettingModel extends Model
 	}
 
 	/**
+	 * Removes stored and changed values
+	 * from the current user's session.
+	 *
+	 * @return void
+	 */
+	public function clearSession($params)
+	{
+		['id' => $ids, 'data' => $data, 'result' => $result] = $params;
+
+		// No need to clear if the content was
+		// not changed or the update failed.
+		if ($result === false || !array_key_exists('content', $data))
+		{
+			return;
+		}
+
+		// Get the setting name
+		$session = session();
+		foreach ($ids as $settingId)
+		{
+			$setting = $this->find($settingId);
+			$session->remove('settings-' . $setting->name);
+		}
+	}
+
+	/**
 	 * Retrieves available Settings from the
 	 * store, cache, or database; skips the
 	 * summary field to improve performance.
