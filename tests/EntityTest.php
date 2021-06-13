@@ -25,7 +25,10 @@ final class EntityTest extends SettingsTestCase
 
 	public function testContentJsonCastsToDatatype()
 	{
-		$array = ['a' => 'Bananas', 'b' => 'Oranges'];
+		$array = [
+			'a' => 'Bananas',
+			'b' => 'Oranges',
+		];
 
 		$setting = new Setting([
 			'datatype' => 'json-array',
@@ -33,9 +36,9 @@ final class EntityTest extends SettingsTestCase
 		]);
 
 		$check = $this->getPrivateProperty($setting, 'attributes')['content'];
-		$this->assertEquals('{"a":"Bananas","b":"Oranges"}', $check);
+		$this->assertSame('{"a":"Bananas","b":"Oranges"}', $check);
 
-		$this->assertEquals($array, $setting->content);
+		$this->assertSame($array, $setting->content);
 	}
 
 	public function testFaked()
