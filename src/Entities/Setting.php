@@ -19,6 +19,21 @@ class Setting extends Entity
 	];
 
 	/**
+	 * Sets the cast datatype for
+	 * the content field.
+	 *
+	 * @param string $datatype
+	 *
+	 * @return $this
+	 */
+	public function setContentCast(string $datatype = 'string')
+	{
+		$this->casts['content'] = $datatype;
+
+		return $this;
+	}
+
+	/**
 	 * Forces the content to cast
 	 * to its predefined datatype.
 	 *
@@ -26,7 +41,7 @@ class Setting extends Entity
 	 */
 	public function __construct(array $data = null)
 	{
-		$this->casts['content'] = $data['datatype'] ?? 'string';
+		$this->setContentCast($data['datatype'] ?? 'string');
 
 		parent::__construct($data);
 	}

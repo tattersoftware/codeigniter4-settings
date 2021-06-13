@@ -96,7 +96,7 @@ class SettingModel extends Model
 		self::$templates = [];
 		foreach ($templates as $template)
 		{
-			self::$templates[$template['name']] = new Setting($template);
+			self::$templates[$template['name']] = (new Setting())->setContentCast($template['datatype'])->setAttributes($template);
 		}
 
 		return self::$templates;
