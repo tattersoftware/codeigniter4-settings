@@ -7,9 +7,11 @@
 **Closed issues:**
 
 - Authentication Optional [\#24](https://github.com/tattersoftware/codeigniter4-settings/issues/24)
+- Writing values to database [\#20](https://github.com/tattersoftware/codeigniter4-settings/issues/20)
 
 **Merged pull requests:**
 
+- Prep for Release [\#28](https://github.com/tattersoftware/codeigniter4-settings/pull/28) ([MGatner](https://github.com/MGatner))
 - Coding Style [\#27](https://github.com/tattersoftware/codeigniter4-settings/pull/27) ([MGatner](https://github.com/MGatner))
 - Refresh toolkit [\#26](https://github.com/tattersoftware/codeigniter4-settings/pull/26) ([MGatner](https://github.com/MGatner))
 - Remove auth requirement [\#25](https://github.com/tattersoftware/codeigniter4-settings/pull/25) ([MGatner](https://github.com/MGatner))
