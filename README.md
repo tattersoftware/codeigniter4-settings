@@ -1,8 +1,9 @@
 # Tatter\Settings
 Lightweight settings management for CodeIgniter 4
 
-[![](https://github.com/tattersoftware/codeigniter4-settings/workflows/PHPUnit/badge.svg)](https://github.com/tattersoftware/codeigniter4-settings/actions?query=workflow%3A%22PHPUnit)
-[![](https://github.com/tattersoftware/codeigniter4-settings/workflows/PHPStan/badge.svg)](https://github.com/tattersoftware/codeigniter4-settings/actions?query=workflow%3A%22PHPStan)
+[![](https://github.com/tattersoftware/codeigniter4-settings/workflows/PHPUnit/badge.svg)](https://github.com/tattersoftware/codeigniter4-settings/actions/workflows/test.yml)
+[![](https://github.com/tattersoftware/codeigniter4-settings/workflows/PHPStan/badge.svg)](https://github.com/tattersoftware/codeigniter4-settings/actions/workflows/analyze.yml)
+[![](https://github.com/tattersoftware/codeigniter4-settings/workflows/Deptrac/badge.svg)](https://github.com/tattersoftware/codeigniter4-settings/actions/workflows/inspect.yml)
 [![Coverage Status](https://coveralls.io/repos/github/tattersoftware/codeigniter4-settings/badge.svg?branch=develop)](https://coveralls.io/github/tattersoftware/codeigniter4-settings?branch=develop)
 
 ## Quick Start
