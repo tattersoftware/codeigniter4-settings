@@ -7,6 +7,8 @@ use Tests\Support\SettingsTestCase;
 
 /**
  * @see https://github.com/codeigniter4/CodeIgniter4/blob/develop/tests/system/Commands/HelpCommandTest.php
+ *
+ * @internal
  */
 final class CommandsTest extends SettingsTestCase
 {
@@ -30,11 +32,6 @@ final class CommandsTest extends SettingsTestCase
 	protected function tearDown(): void
 	{
 		stream_filter_remove($this->streamFilter);
-	}
-
-	private function getBuffer()
-	{
-		return CITestStreamFilter::$buffer;
 	}
 
 	//--------------------------------------------------------------------
@@ -75,5 +72,10 @@ final class CommandsTest extends SettingsTestCase
 		command('settings:add fruits ThisDatatypeIsFarTooLongToBeAllowed "Favorite fruits" bananas 1');
 
 		$this->assertStringContainsString('The datatype field cannot exceed 31 characters in length', $this->getBuffer());
+	}
+
+	private function getBuffer()
+	{
+		return CITestStreamFilter::$buffer;
 	}
 }

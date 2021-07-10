@@ -1,26 +1,31 @@
-<?php namespace Tests\Support;
+<?php
+
+namespace Tests\Support;
 
 use CodeIgniter\Test\CIUnitTestCase;
 use CodeIgniter\Test\DatabaseTestTrait;
 use Tatter\Settings\Database\Seeds\SettingSeeder;
 use Tatter\Settings\Models\SettingModel;
 
-class SettingsTestCase extends CIUnitTestCase
+/**
+ * @internal
+ */
+final class SettingsTestCase extends CIUnitTestCase
 {
 	use DatabaseTestTrait;
 
 	/**
-	 * @var boolean
+	 * @var bool
 	 */
 	protected $refresh = true;
 
 	/**
-	 * @var string|array|null
+	 * @var array|string|null
 	 */
-	protected $namespace = null;
+	protected $namespace;
 
 	/**
-	 * @var string|array
+	 * @var array|string
 	 */
 	protected $seed = SettingSeeder::class;
 

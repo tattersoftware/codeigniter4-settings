@@ -1,10 +1,13 @@
-<?php namespace Tatter\Settings\Entities;
+<?php
+
+namespace Tatter\Settings\Entities;
 
 use CodeIgniter\Entity\Entity;
 
 class Setting extends Entity
 {
-	protected $table      = 'settings';
+	protected $table = 'settings';
+
 	protected $primaryKey = 'id';
 
 	protected $dates = [
@@ -19,6 +22,19 @@ class Setting extends Entity
 	];
 
 	/**
+	 * Forces the content to cast
+	 * to its predefined datatype.
+	 *
+	 * @param array|null $data
+	 */
+	public function __construct(array $data = null)
+	{
+		$this->setContentCast($data['datatype'] ?? 'string');
+
+		parent::__construct($data);
+	}
+
+	/**
 	 * Sets the cast datatype for
 	 * the content field.
 	 *
@@ -31,18 +47,5 @@ class Setting extends Entity
 		$this->casts['content'] = $datatype;
 
 		return $this;
-	}
-
-	/**
-	 * Forces the content to cast
-	 * to its predefined datatype.
-	 *
-	 * @param array|null $data
-	 */
-	public function __construct(array $data = null)
-	{
-		$this->setContentCast($data['datatype'] ?? 'string');
-
-		parent::__construct($data);
 	}
 }

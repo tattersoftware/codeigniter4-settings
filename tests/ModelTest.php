@@ -1,9 +1,11 @@
 <?php
 
-use Tatter\Settings\Entities\Setting;
 use Tatter\Settings\Models\SettingModel;
 use Tests\Support\SettingsTestCase;
 
+/**
+ * @internal
+ */
 final class ModelTest extends SettingsTestCase
 {
 	public function testGetTemplatesDoesNotCastDatabaseValues()
@@ -35,5 +37,4 @@ final class ModelTest extends SettingsTestCase
 
 		$this->assertSame($array, config('Settings')->fruits);
 	}
-
 }

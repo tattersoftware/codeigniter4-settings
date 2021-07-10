@@ -4,6 +4,9 @@ use Tatter\Settings\Entities\Setting;
 use Tatter\Settings\Models\SettingModel;
 use Tests\Support\SettingsTestCase;
 
+/**
+ * @internal
+ */
 final class EntityTest extends SettingsTestCase
 {
 	public function testContentCastDefaultsToString()

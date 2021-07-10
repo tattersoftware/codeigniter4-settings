@@ -7,12 +7,16 @@ use Tatter\Settings\Models\SettingModel;
 use Tatter\Settings\Settings;
 use Tests\Support\SettingsTestCase;
 
+/**
+ * @internal
+ */
 final class LibraryTest extends SettingsTestCase
 {
-	use AuthTestTrait, DatabaseTestTrait;
+	use AuthTestTrait; use DatabaseTestTrait;
 
 	protected $migrateOnce = true;
-	protected $seedOnce    = true;
+
+	protected $seedOnce = true;
 
 	protected function tearDown(): void
 	{
@@ -27,16 +31,16 @@ final class LibraryTest extends SettingsTestCase
 		$this->expectException('InvalidArgumentException');
 		$this->expectExceptionMessage('Cache key contains reserved characters {}()/\@:');
 
-		(new Settings)->get('colons:not:allow');
+		(new Settings())->get('colons:not:allow');
 	}
 
 	public function testGetTemplate()
 	{
-		$result = (new Settings)->getTemplate('currencyScale');
+		$result = (new Settings())->getTemplate('currencyScale');
 
 		$this->assertInstanceOf(Setting::class, $result);
 		$this->assertSame(100, $result->content);
-		$this->assertSame(null, $result->summary); // Summaries are dropped to improve performance
+		$this->assertNull($result->summary); // Summaries are dropped to improve performance
 	}
 
 	public function testSetSession()
@@ -54,21 +58,21 @@ final class LibraryTest extends SettingsTestCase
 	{
 		$_SESSION['settings-fruit'] = 'banana';
 
-		$result = (new Settings)->get('fruit');
+		$result = (new Settings())->get('fruit');
 
 		$this->assertSame('banana', $result);
 	}
 
 	public function testGetReturnsNull()
 	{
-		$result = (new Settings)->get('does not exist');
+		$result = (new Settings())->get('does not exist');
 
 		$this->assertNull($result);
 	}
 
 	public function testGetReturnsDefault()
 	{
-		$result = (new Settings)->get('currencyScale');
+		$result = (new Settings())->get('currencyScale');
 
 		$this->assertSame(100, $result);
 		$this->assertSame(['settings-currencyScale' => 100], $_SESSION);
@@ -104,7 +108,7 @@ final class LibraryTest extends SettingsTestCase
 			'content'    => '1.2.3',
 		]);
 
-		$result = (new Settings)->get('siteVersion');
+		$result = (new Settings())->get('siteVersion');
 
 		$this->assertSame('1.0.0', $result);
 		$this->assertSame('1.0.0', $_SESSION['settings-siteVersion']);
@@ -112,7 +116,7 @@ final class LibraryTest extends SettingsTestCase
 
 	public function testMagicGet()
 	{
-		$result = (new Settings)->currencyScale;
+		$result = (new Settings())->currencyScale;
 
 		$this->assertSame(100, $result);
 		$this->assertSame(100, $_SESSION['settings-currencyScale']);
@@ -120,7 +124,7 @@ final class LibraryTest extends SettingsTestCase
 
 	public function testSetAlwaysSetsSession()
 	{
-		$result = (new Settings)->set('goblins', 'blaart');
+		$result = (new Settings())->set('goblins', 'blaart');
 
 		$this->assertInstanceOf(Settings::class, $result);
 		$this->assertSame(['settings-goblins' => 'blaart'], $_SESSION);
@@ -195,7 +199,7 @@ final class LibraryTest extends SettingsTestCase
 
 	public function testConfigMagicGetIgnoresOverrides()
 	{
-		$user     = $this->createAuthUser();
+		$user = $this->createAuthUser();
 		service('settings')->set('perPage', 1000000);
 
 		$this->assertSame(10, config('Settings')->perPage);

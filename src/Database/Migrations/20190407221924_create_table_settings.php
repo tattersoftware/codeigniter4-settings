@@ -1,4 +1,6 @@
-<?php namespace Tatter\Settings\Database\Migrations;
+<?php
+
+namespace Tatter\Settings\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
@@ -17,14 +19,14 @@ class Migration_create_table_settings extends Migration
 			'updated_at' => ['type' => 'datetime', 'null' => true],
 			'deleted_at' => ['type' => 'datetime', 'null' => true],
 		];
-		
+
 		$this->forge->addField('id');
 		$this->forge->addField($fields);
 
 		$this->forge->addKey('created_at');
-		
+
 		$this->forge->createTable('settings');
-		
+
 		// Settings<->Users
 		$fields = [
 			'setting_id' => ['type' => 'int', 'unsigned' => true],
@@ -32,14 +34,14 @@ class Migration_create_table_settings extends Migration
 			'content'    => ['type' => 'varchar', 'constraint' => 255, 'default' => ''],
 			'created_at' => ['type' => 'datetime', 'null' => true],
 		];
-		
+
 		$this->forge->addField('id');
 		$this->forge->addField($fields);
 
 		$this->forge->addKey(['setting_id', 'user_id']);
 		$this->forge->addKey(['user_id', 'setting_id']);
 		$this->forge->addKey('created_at');
-		
+
 		$this->forge->createTable('settings_users');
 	}
 

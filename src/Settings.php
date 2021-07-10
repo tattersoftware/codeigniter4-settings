@@ -1,16 +1,46 @@
-<?php namespace Tatter\Settings;
+<?php
+
+namespace Tatter\Settings;
 
 use CodeIgniter\Cache\Handlers\BaseHandler;
-use Tatter\Settings\Config\Settings as SettingsConfig;
+use InvalidArgumentException;
 use Tatter\Settings\Entities\Setting;
 use Tatter\Settings\Models\SettingModel;
-use InvalidArgumentException;
 
 /**
- * Settings Library
+ * Settings Library.
  */
 class Settings
 {
+ 	//--------------------------------------------------------------------
+
+	/**
+	 * Magic getter.
+	 *
+	 * @param string $name
+	 *
+	 * @return mixed
+	 */
+	public function __get(string $name)
+	{
+		return $this->get($name);
+	}
+
+ 	//--------------------------------------------------------------------
+
+	/**
+	 * Magic setter for changing a setting.
+	 *
+	 * @param string     $name
+	 * @param mixed|null $content
+	 *
+	 * @return void
+	 */
+	public function __set(string $name, $content): void
+	{
+		$this->set($name, $content);
+	}
+
 	/**
 	 * Validates a Setting name.
 	 * Since this library relies on Cache
@@ -19,9 +49,9 @@ class Settings
 	 *
 	 * @param string $name
 	 *
-	 * @return string The validated name
-	 *
 	 * @throws InvalidArgumentException
+	 *
+	 * @return string The validated name
 	 */
 	public static function validate(string $name): string
 	{
@@ -46,37 +76,6 @@ class Settings
 		$templates = model(SettingModel::class)->getTemplates();
 
 		return $templates[$name] ?? null;
-	}
-
-	/**
-	 * Stores Setting content in session and returns the value.
-	 * Always called when retrieving a value to improve chances
-	 * at a hit next time.
-	 *
-	 * @param string $name
-	 * @param mixed $content
-	 *
-	 * @return mixed
-	 */
-	protected function setSession(string $name, $content)
-	{
-		session()->set('settings-' . $name, $content);
-
-		return $content;
-	}
-
- 	//--------------------------------------------------------------------
-
-	/**
-	 * Magic getter
-	 *
-	 * @param string $name
-	 *
-	 * @return mixed
-	 */
-	public function __get(string $name)
-	{
-		return $this->get($name);
 	}
 
 	/**
@@ -121,26 +120,11 @@ class Settings
 		return $this->setSession($name, $setting->content);
 	}
 
- 	//--------------------------------------------------------------------
-
 	/**
-	 * Magic setter for changing a setting
+	 * Updates a Setting value.
 	 *
 	 * @param string $name
-	 * @param mixed|null $content
-	 *
-	 * @return void
-	 */
-	public function __set(string $name, $content): void
-	{
-		$this->set($name, $content);
-	}
-
-	/**
-	 * Updates a Setting value
-	 *
-	 * @param string $name
-	 * @param mixed $content Null to remove
+	 * @param mixed  $content Null to remove
 	 *
 	 * @return $this
 	 */
@@ -174,5 +158,22 @@ class Settings
 		$this->setSession($name, $content);
 
 		return $this;
+	}
+
+	/**
+	 * Stores Setting content in session and returns the value.
+	 * Always called when retrieving a value to improve chances
+	 * at a hit next time.
+	 *
+	 * @param string $name
+	 * @param mixed  $content
+	 *
+	 * @return mixed
+	 */
+	protected function setSession(string $name, $content)
+	{
+		session()->set('settings-' . $name, $content);
+
+		return $content;
 	}
 }

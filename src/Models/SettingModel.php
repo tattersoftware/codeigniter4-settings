@@ -1,4 +1,6 @@
-<?php namespace Tatter\Settings\Models;
+<?php
+
+namespace Tatter\Settings\Models;
 
 use CodeIgniter\I18n\Time;
 use CodeIgniter\Model;
@@ -7,27 +9,16 @@ use Tatter\Settings\Entities\Setting;
 
 class SettingModel extends Model
 {
-	/**
-	 * Store of loaded Setting templates,
-	 * optimized for performance.
-	 *
-	 * @var array<string,Setting>|null
-	 */
-	private static $templates;
+	protected $table = 'settings';
 
-	/**
-	 * Store of overrides by user ID.
-	 *
-	 * @var array<int,array<int,mixed>> [userId => [settingId => contents]]
-	 */
-	private static $overrides = [];
-
-	protected $table      = 'settings';
 	protected $primaryKey = 'id';
+
 	protected $returnType = Setting::class;
 
-	protected $useTimestamps  = true;
+	protected $useTimestamps = true;
+
 	protected $useSoftDeletes = true;
+
 	protected $skipValidation = false;
 
 	protected $allowedFields = [
@@ -47,8 +38,25 @@ class SettingModel extends Model
 	];
 
 	protected $afterInsert = ['clearTemplates'];
+
 	protected $afterUpdate = ['clearTemplates'];
+
 	protected $afterDelete = ['clearTemplates'];
+
+	/**
+	 * Store of loaded Setting templates,
+	 * optimized for performance.
+	 *
+	 * @var array<string,Setting>|null
+	 */
+	private static $templates;
+
+	/**
+	 * Store of overrides by user ID.
+	 *
+	 * @var array<int,array<int,mixed>> [userId => [settingId => contents]]
+	 */
+	private static $overrides = [];
 
 	/**
 	 * Removes stored and cached templates.
@@ -83,8 +91,8 @@ class SettingModel extends Model
 		{
 			// ... then have to load from the database instead
 			$templates = $this->builder()
-				->select(['id', 'name', 'datatype', 'content', 'protected'])
-				->get()->getResultArray();
+			    ->select(['id', 'name', 'datatype', 'content', 'protected'])
+			    ->get()->getResultArray();
 
 			if (isset($ttl))
 			{
@@ -127,10 +135,10 @@ class SettingModel extends Model
 	}
 
 	/**
-	 * Sets a user override for a Setting
+	 * Sets a user override for a Setting.
 	 *
-	 * @param int $settingId
-	 * @param int $userId
+	 * @param int   $settingId
+	 * @param int   $userId
 	 * @param mixed $content
 	 *
 	 * @return void
@@ -141,9 +149,9 @@ class SettingModel extends Model
 
 		// Remove any existing overrides
 		$builder->where('user_id', $userId)
-			->where('setting_id', $settingId)
-			->delete();
-			
+		    ->where('setting_id', $settingId)
+		    ->delete();
+
 		// Add the new row
 		$builder->insert([
 			'setting_id' => $settingId,
@@ -174,7 +182,7 @@ class SettingModel extends Model
 			'datatype'  => 'string',
 			'summary'   => $faker->sentence,
 			'content'   => $faker->lexify,
-			'protected' => ! (bool) rand(0,3),
+			'protected' => ! (bool) mt_rand(0, 3),
 		]);
 	}
 }

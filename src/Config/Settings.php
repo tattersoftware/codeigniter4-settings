@@ -1,4 +1,6 @@
-<?php namespace Tatter\Settings\Config;
+<?php
+
+namespace Tatter\Settings\Config;
 
 use CodeIgniter\Config\BaseConfig;
 
@@ -10,7 +12,7 @@ class Settings extends BaseConfig
 	 *
 	 * @param string $name
 	 *
-	 * @return mixed  Null for non-existant templates
+	 * @return mixed Null for non-existant templates
 	 */
 	public function __get(string $name)
 	{
@@ -20,6 +22,6 @@ class Settings extends BaseConfig
 			return $setting->content;
 		}
 
-		return null;		
+		return null;
 	}
 }

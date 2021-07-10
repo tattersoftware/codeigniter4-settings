@@ -1,7 +1,8 @@
-<?php namespace Tatter\Settings\Config;
+<?php
+
+namespace Tatter\Settings\Config;
 
 use Config\Services as BaseService;
-use Tatter\Settings\Config\Settings as SettingsConfig;
 use Tatter\Settings\Settings;
 
 class Services extends BaseService
