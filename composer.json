@@ -1,64 +1,65 @@
 {
-	"name": "tatter/settings",
-	"type": "library",
-	"description": "Lightweight settings management for CodeIgniter 4",
-	"keywords": [
-		"codeigniter",
-		"codeigniter4",
-		"settings",
-		"preferences"
-	],
-	"homepage": "https://github.com/tattersoftware/codeigniter4-settings",
-	"license": "MIT",
-	"authors": [
-		{
-			"name": "Matthew Gatner",
-			"email": "mgatner@tattersoftware.com",
-			"homepage": "https://tattersoftware.com",
-			"role": "Developer"
-		}
-	],
-	"require": {
-		"php": "^7.3 || ^8.0"
-	},
-	"require-dev": {
-		"codeigniter4/authentication-implementation": "1.0",
-		"codeigniter4/codeigniter4": "dev-develop",
-		"myth/auth": "dev-develop",
-		"tatter/tools": "^1.8"
-	},
-	"suggest": {
-		"codeigniter4/authentication-implementation": "Allows for user setting overrides"
-	},
-	"autoload": {
-		"psr-4": {
-			"Tatter\\Settings\\": "src"
-		},
-		"exclude-from-classmap": [
-			"**/Database/Migrations/**"
-		]
-	},
-	"autoload-dev": {
-		"psr-4": {
-			"Tests\\Support\\": "tests/_support"
-		}
-	},
-	"repositories": [
-		{
-			"type": "vcs",
-			"url": "https://github.com/codeigniter4/codeigniter4"
-		},
-		{
-			"type": "vcs",
-			"url": "https://github.com/lonnieezell/myth-auth"
-		}
-	],
-	"minimum-stability": "dev",
-	"prefer-stable": true,
-	"scripts": {
-		"analyze": "phpstan analyze",
-		"mutate": "infection --threads=2 --skip-initial-tests --coverage=build/phpunit",
-		"style": "phpcbf --standard=./vendor/codeigniter4/codeigniter4-standard/CodeIgniter4 tests/ src/",
-		"test": "phpunit"
-	}
+    "name": "tatter/settings",
+    "type": "library",
+    "description": "Lightweight settings management for CodeIgniter 4",
+    "keywords": [
+        "codeigniter",
+        "codeigniter4",
+        "settings",
+        "preferences"
+    ],
+    "homepage": "https://github.com/tattersoftware/codeigniter4-settings",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Matthew Gatner",
+            "email": "mgatner@tattersoftware.com",
+            "homepage": "https://tattersoftware.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.3 || ^8.0"
+    },
+    "require-dev": {
+        "codeigniter4/authentication-implementation": "1.0",
+        "codeigniter4/codeigniter4": "dev-develop",
+        "myth/auth": "dev-develop",
+        "tatter/tools": "^1.10"
+    },
+    "suggest": {
+        "codeigniter4/authentication-implementation": "Allows for user setting overrides"
+    },
+    "autoload": {
+        "psr-4": {
+            "Tatter\\Settings\\": "src"
+        },
+        "exclude-from-classmap": [
+            "**/Database/Migrations/**"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\Support\\": "tests/_support"
+        }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/codeigniter4/codeigniter4"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/lonnieezell/myth-auth"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "scripts": {
+        "analyze": "phpstan analyze",
+        "inspect": "deptrac analyze --cache-file=build/deptrac.cache",
+        "mutate": "infection --threads=2 --skip-initial-tests --coverage=build/phpunit",
+        "style": "php-cs-fixer fix --verbose --ansi",
+        "test": "phpunit"
+    }
 }
