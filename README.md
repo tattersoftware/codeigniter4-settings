@@ -89,13 +89,13 @@ Examples:
 
 * When you release a new version of your software:
 
-	$settings->latestRelease = $newVersion;
+	model('SettingModel')->where('name', 'latestRelease')->update(['content' => '1.2.3');
+	echo view('home', ['latestRelease' => service('settings')->latestRelease]);
 
 * When a user searches a list of jobs:
 
 	$settings->jobsSearch = $_POST['searchTerm'];
 	$data['jobs'] = $jobModel->paginate($settings->perPage);
-e/Seeds/SettingsSeeder.php](src/Database/Seeds/SettingsSeeder.php).
 
 ### Magic Config
 

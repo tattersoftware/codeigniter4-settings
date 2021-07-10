@@ -1,5 +1,21 @@
 # Changelog
 
+## [v2.0.1](https://github.com/tattersoftware/codeigniter4-settings/tree/v2.0.1) (2021-07-10)
+
+[Full Changelog](https://github.com/tattersoftware/codeigniter4-settings/compare/v2.0.0...v2.0.1)
+
+**Closed issues:**
+
+- Authentication Optional [\#24](https://github.com/tattersoftware/codeigniter4-settings/issues/24)
+
+**Merged pull requests:**
+
+- Coding Style [\#27](https://github.com/tattersoftware/codeigniter4-settings/pull/27) ([MGatner](https://github.com/MGatner))
+- Refresh toolkit [\#26](https://github.com/tattersoftware/codeigniter4-settings/pull/26) ([MGatner](https://github.com/MGatner))
+- Remove auth requirement [\#25](https://github.com/tattersoftware/codeigniter4-settings/pull/25) ([MGatner](https://github.com/MGatner))
+- Demonstrate failing array casts. [\#23](https://github.com/tattersoftware/codeigniter4-settings/pull/23) ([sfadschm](https://github.com/sfadschm))
+- Remove Users [\#19](https://github.com/tattersoftware/codeigniter4-settings/pull/19) ([MGatner](https://github.com/MGatner))
+
 ## [v2.0.0](https://github.com/tattersoftware/codeigniter4-settings/tree/v2.0.0) (2021-05-26)
 
 [Full Changelog](https://github.com/tattersoftware/codeigniter4-settings/compare/v1.2.1...v2.0.0)
@@ -11,6 +27,7 @@
 
 **Merged pull requests:**
 
+- Prep for release [\#18](https://github.com/tattersoftware/codeigniter4-settings/pull/18) ([MGatner](https://github.com/MGatner))
 - Magic Config [\#17](https://github.com/tattersoftware/codeigniter4-settings/pull/17) ([MGatner](https://github.com/MGatner))
 - Refactor [\#16](https://github.com/tattersoftware/codeigniter4-settings/pull/16) ([MGatner](https://github.com/MGatner))
 
