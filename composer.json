@@ -22,9 +22,9 @@
         "php": "^7.3 || ^8.0"
     },
     "require-dev": {
-        "codeigniter4/authentication-implementation": "1.0",
+        "codeigniter4/authentication-implementation": "^1.0",
         "codeigniter4/codeigniter4": "dev-develop",
-        "myth/auth": "dev-develop",
+        "myth/auth": "^1.0",
         "tatter/tools": "^1.10"
     },
     "suggest": {
@@ -47,10 +47,6 @@
         {
             "type": "vcs",
             "url": "https://github.com/codeigniter4/codeigniter4"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/lonnieezell/myth-auth"
         }
     ],
     "minimum-stability": "dev",
