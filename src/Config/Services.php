@@ -1,21 +1,30 @@
-<?php namespace Tatter\Settings\Config;
+<?php
+
+/**
+ * This file is part of Tatter Settings.
+ *
+ * (c) 2021 Tatter Software
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
+namespace Tatter\Settings\Config;
 
 use Config\Services as BaseService;
-use Tatter\Settings\Config\Settings as SettingsConfig;
 use Tatter\Settings\Settings;
 
 class Services extends BaseService
 {
-	/**
-	 * @param bool $getShared
-	 */
-	public static function settings(bool $getShared = true)
-	{
-		if ($getShared)
-		{
-			return static::getSharedInstance('settings');
-		}
+    /**
+     * @param bool $getShared
+     */
+    public static function settings(bool $getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('settings');
+        }
 
-		return new Settings();
-	}
+        return new Settings();
+    }
 }

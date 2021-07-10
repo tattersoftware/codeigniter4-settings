@@ -1,51 +1,62 @@
-<?php namespace Tatter\Settings\Database\Migrations;
+<?php
+
+/**
+ * This file is part of Tatter Settings.
+ *
+ * (c) 2021 Tatter Software
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
+namespace Tatter\Settings\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
 class Migration_create_table_settings extends Migration
 {
-	public function up()
-	{
-		// Settings
-		$fields = [
-			'name'       => ['type' => 'varchar', 'constraint' => 63, 'unique' => true],
-			'scope'      => ['type' => 'varchar', 'constraint' => 15, 'default' => ''],
-			'summary'    => ['type' => 'varchar', 'constraint' => 255, 'default' => ''],
-			'content'    => ['type' => 'varchar', 'constraint' => 255, 'default' => ''],
-			'protected'  => ['type' => 'boolean', 'default' => 1],
-			'created_at' => ['type' => 'datetime', 'null' => true],
-			'updated_at' => ['type' => 'datetime', 'null' => true],
-			'deleted_at' => ['type' => 'datetime', 'null' => true],
-		];
-		
-		$this->forge->addField('id');
-		$this->forge->addField($fields);
+    public function up()
+    {
+        // Settings
+        $fields = [
+            'name'       => ['type' => 'varchar', 'constraint' => 63, 'unique' => true],
+            'scope'      => ['type' => 'varchar', 'constraint' => 15, 'default' => ''],
+            'summary'    => ['type' => 'varchar', 'constraint' => 255, 'default' => ''],
+            'content'    => ['type' => 'varchar', 'constraint' => 255, 'default' => ''],
+            'protected'  => ['type' => 'boolean', 'default' => 1],
+            'created_at' => ['type' => 'datetime', 'null' => true],
+            'updated_at' => ['type' => 'datetime', 'null' => true],
+            'deleted_at' => ['type' => 'datetime', 'null' => true],
+        ];
 
-		$this->forge->addKey('created_at');
-		
-		$this->forge->createTable('settings');
-		
-		// Settings<->Users
-		$fields = [
-			'setting_id' => ['type' => 'int', 'unsigned' => true],
-			'user_id'    => ['type' => 'int', 'unsigned' => true],
-			'content'    => ['type' => 'varchar', 'constraint' => 255, 'default' => ''],
-			'created_at' => ['type' => 'datetime', 'null' => true],
-		];
-		
-		$this->forge->addField('id');
-		$this->forge->addField($fields);
+        $this->forge->addField('id');
+        $this->forge->addField($fields);
 
-		$this->forge->addKey(['setting_id', 'user_id']);
-		$this->forge->addKey(['user_id', 'setting_id']);
-		$this->forge->addKey('created_at');
-		
-		$this->forge->createTable('settings_users');
-	}
+        $this->forge->addKey('created_at');
 
-	public function down()
-	{
-		$this->forge->dropTable('settings');
-		$this->forge->dropTable('settings_users');
-	}
+        $this->forge->createTable('settings');
+
+        // Settings<->Users
+        $fields = [
+            'setting_id' => ['type' => 'int', 'unsigned' => true],
+            'user_id'    => ['type' => 'int', 'unsigned' => true],
+            'content'    => ['type' => 'varchar', 'constraint' => 255, 'default' => ''],
+            'created_at' => ['type' => 'datetime', 'null' => true],
+        ];
+
+        $this->forge->addField('id');
+        $this->forge->addField($fields);
+
+        $this->forge->addKey(['setting_id', 'user_id']);
+        $this->forge->addKey(['user_id', 'setting_id']);
+        $this->forge->addKey('created_at');
+
+        $this->forge->createTable('settings_users');
+    }
+
+    public function down()
+    {
+        $this->forge->dropTable('settings');
+        $this->forge->dropTable('settings_users');
+    }
 }

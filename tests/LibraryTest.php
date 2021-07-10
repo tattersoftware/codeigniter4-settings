@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of Tatter Settings.
+ *
+ * (c) 2021 Tatter Software
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 use CodeIgniter\Test\DatabaseTestTrait;
 use Myth\Auth\Test\AuthTestTrait;
 use Tatter\Settings\Entities\Setting;
@@ -7,197 +16,202 @@ use Tatter\Settings\Models\SettingModel;
 use Tatter\Settings\Settings;
 use Tests\Support\SettingsTestCase;
 
+/**
+ * @internal
+ */
 final class LibraryTest extends SettingsTestCase
 {
-	use AuthTestTrait, DatabaseTestTrait;
+    use AuthTestTrait;
+    use DatabaseTestTrait;
 
-	protected $migrateOnce = true;
-	protected $seedOnce    = true;
+    protected $migrateOnce = true;
 
-	protected function tearDown(): void
-	{
-		parent::tearDown();
+    protected $seedOnce = true;
 
-		$this->resetAuthServices();
-		model(SettingModel::class)->clearTemplates();
-	}
+    protected function tearDown(): void
+    {
+        parent::tearDown();
 
-	public function testInvalidNameThrowsException()
-	{
-		$this->expectException('InvalidArgumentException');
-		$this->expectExceptionMessage('Cache key contains reserved characters {}()/\@:');
+        $this->resetAuthServices();
+        model(SettingModel::class)->clearTemplates();
+    }
 
-		(new Settings)->get('colons:not:allow');
-	}
+    public function testInvalidNameThrowsException()
+    {
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('Cache key contains reserved characters {}()/\@:');
 
-	public function testGetTemplate()
-	{
-		$result = (new Settings)->getTemplate('currencyScale');
+        (new Settings())->get('colons:not:allow');
+    }
 
-		$this->assertInstanceOf(Setting::class, $result);
-		$this->assertSame(100, $result->content);
-		$this->assertSame(null, $result->summary); // Summaries are dropped to improve performance
-	}
+    public function testGetTemplate()
+    {
+        $result = (new Settings())->getTemplate('currencyScale');
 
-	public function testSetSession()
-	{
-		$settings = new Settings();
-		$method   = $this->getPrivateMethodInvoker($settings, 'setSession');
+        $this->assertInstanceOf(Setting::class, $result);
+        $this->assertSame(100, $result->content);
+        $this->assertNull($result->summary); // Summaries are dropped to improve performance
+    }
 
-		$result = $method('foo', 'bar');
+    public function testSetSession()
+    {
+        $settings = new Settings();
+        $method   = $this->getPrivateMethodInvoker($settings, 'setSession');
 
-		$this->assertSame('bar', $result);
-		$this->assertSame(['settings-foo' => 'bar'], $_SESSION);
-	}
+        $result = $method('foo', 'bar');
 
-	public function testGetUsesSession()
-	{
-		$_SESSION['settings-fruit'] = 'banana';
+        $this->assertSame('bar', $result);
+        $this->assertSame(['settings-foo' => 'bar'], $_SESSION);
+    }
 
-		$result = (new Settings)->get('fruit');
+    public function testGetUsesSession()
+    {
+        $_SESSION['settings-fruit'] = 'banana';
 
-		$this->assertSame('banana', $result);
-	}
+        $result = (new Settings())->get('fruit');
 
-	public function testGetReturnsNull()
-	{
-		$result = (new Settings)->get('does not exist');
+        $this->assertSame('banana', $result);
+    }
 
-		$this->assertNull($result);
-	}
+    public function testGetReturnsNull()
+    {
+        $result = (new Settings())->get('does not exist');
 
-	public function testGetReturnsDefault()
-	{
-		$result = (new Settings)->get('currencyScale');
+        $this->assertNull($result);
+    }
 
-		$this->assertSame(100, $result);
-		$this->assertSame(['settings-currencyScale' => 100], $_SESSION);
-	}
+    public function testGetReturnsDefault()
+    {
+        $result = (new Settings())->get('currencyScale');
 
-	public function testGetUsesOverride()
-	{
-		$user     = $this->createAuthUser();
-		$settings = new Settings();
-		$setting  = $settings->getTemplate('perPage');
+        $this->assertSame(100, $result);
+        $this->assertSame(['settings-currencyScale' => 100], $_SESSION);
+    }
 
-		$this->hasInDatabase('settings_users', [
-			'setting_id' => $setting->id,
-			'user_id'    => $user->id,
-			'content'    => '42',
-		]);
+    public function testGetUsesOverride()
+    {
+        $user     = $this->createAuthUser();
+        $settings = new Settings();
+        $setting  = $settings->getTemplate('perPage');
 
-		$result = $settings->get('perPage');
+        $this->hasInDatabase('settings_users', [
+            'setting_id' => $setting->id,
+            'user_id'    => $user->id,
+            'content'    => '42',
+        ]);
 
-		$this->assertSame(42, $result);
-		$this->assertSame(42, $_SESSION['settings-perPage']);
-	}
+        $result = $settings->get('perPage');
 
-	public function testGetProtectedIgnoresOverride()
-	{
-		$user     = $this->createAuthUser();
-		$settings = new Settings();
-		$setting  = $settings->getTemplate('siteVersion');
+        $this->assertSame(42, $result);
+        $this->assertSame(42, $_SESSION['settings-perPage']);
+    }
 
-		$this->hasInDatabase('settings_users', [
-			'setting_id' => $setting->id,
-			'user_id'    => $user->id,
-			'content'    => '1.2.3',
-		]);
+    public function testGetProtectedIgnoresOverride()
+    {
+        $user     = $this->createAuthUser();
+        $settings = new Settings();
+        $setting  = $settings->getTemplate('siteVersion');
 
-		$result = (new Settings)->get('siteVersion');
+        $this->hasInDatabase('settings_users', [
+            'setting_id' => $setting->id,
+            'user_id'    => $user->id,
+            'content'    => '1.2.3',
+        ]);
 
-		$this->assertSame('1.0.0', $result);
-		$this->assertSame('1.0.0', $_SESSION['settings-siteVersion']);
-	}
+        $result = (new Settings())->get('siteVersion');
 
-	public function testMagicGet()
-	{
-		$result = (new Settings)->currencyScale;
+        $this->assertSame('1.0.0', $result);
+        $this->assertSame('1.0.0', $_SESSION['settings-siteVersion']);
+    }
 
-		$this->assertSame(100, $result);
-		$this->assertSame(100, $_SESSION['settings-currencyScale']);
-	}
+    public function testMagicGet()
+    {
+        $result = (new Settings())->currencyScale;
 
-	public function testSetAlwaysSetsSession()
-	{
-		$result = (new Settings)->set('goblins', 'blaart');
+        $this->assertSame(100, $result);
+        $this->assertSame(100, $_SESSION['settings-currencyScale']);
+    }
 
-		$this->assertInstanceOf(Settings::class, $result);
-		$this->assertSame(['settings-goblins' => 'blaart'], $_SESSION);
-	}
+    public function testSetAlwaysSetsSession()
+    {
+        $result = (new Settings())->set('goblins', 'blaart');
 
-	public function testSetIgnoresProtected()
-	{
-		$settings = new Settings();
+        $this->assertInstanceOf(Settings::class, $result);
+        $this->assertSame(['settings-goblins' => 'blaart'], $_SESSION);
+    }
 
-		$result = $settings->set('serverTimezone', 'Australia/Darwin');
+    public function testSetIgnoresProtected()
+    {
+        $settings = new Settings();
 
-		$this->assertSame('UTC', $settings->serverTimezone);
-		$this->assertSame('UTC', $_SESSION['settings-serverTimezone']);
-	}
+        $result = $settings->set('serverTimezone', 'Australia/Darwin');
 
-	public function testSetNoUser()
-	{
-		$settings = new Settings();
-		$setting  = $settings->getTemplate('theme');
-		$result   = $settings->set('theme', 77);
+        $this->assertSame('UTC', $settings->serverTimezone);
+        $this->assertSame('UTC', $_SESSION['settings-serverTimezone']);
+    }
 
-		$this->assertSame(['settings-theme' => 77], $_SESSION);
-		$this->dontSeeInDatabase('settings_users', ['setting_id' => $setting->id]);
-	}
+    public function testSetNoUser()
+    {
+        $settings = new Settings();
+        $setting  = $settings->getTemplate('theme');
+        $result   = $settings->set('theme', 77);
 
-	public function testSetCreatesOverride()
-	{
-		$user     = $this->createAuthUser();
-		$settings = new Settings();
-		$setting  = $settings->getTemplate('timezone');
-		$result   = $settings->set('timezone', 'foobar/bam');
+        $this->assertSame(['settings-theme' => 77], $_SESSION);
+        $this->dontSeeInDatabase('settings_users', ['setting_id' => $setting->id]);
+    }
 
-		$this->assertSame('foobar/bam', $_SESSION['settings-timezone']);
-		$this->seeInDatabase('settings_users', [
-			'setting_id' => $setting->id,
-			'user_id'    => $user->id,
-			'content'    => 'foobar/bam',
-		]);
-	}
+    public function testSetCreatesOverride()
+    {
+        $user     = $this->createAuthUser();
+        $settings = new Settings();
+        $setting  = $settings->getTemplate('timezone');
+        $result   = $settings->set('timezone', 'foobar/bam');
 
-	public function testStoreOverrides()
-	{
-		$user     = $this->createAuthUser();
-		$settings = new Settings();
-		$result   = $settings->set('theme', 99);
+        $this->assertSame('foobar/bam', $_SESSION['settings-timezone']);
+        $this->seeInDatabase('settings_users', [
+            'setting_id' => $setting->id,
+            'user_id'    => $user->id,
+            'content'    => 'foobar/bam',
+        ]);
+    }
 
-		// Remove records from the cache and database so
-		// we are certain this is coming from the model storage
-		model(SettingModel::class)->builder('settings_users')->truncate();
-		unset($_SESSION['settings-theme']);
-		cache()->clean();
+    public function testStoreOverrides()
+    {
+        $user     = $this->createAuthUser();
+        $settings = new Settings();
+        $result   = $settings->set('theme', 99);
 
-		$this->assertSame(99, $settings->theme);
-	}
+        // Remove records from the cache and database so
+        // we are certain this is coming from the model storage
+        model(SettingModel::class)->builder('settings_users')->truncate();
+        unset($_SESSION['settings-theme']);
+        cache()->clean();
 
-	public function testMagicSet()
-	{
-		$settings = new Settings();
+        $this->assertSame(99, $settings->theme);
+    }
 
-		$result = $settings->winnie = 'pooh';
+    public function testMagicSet()
+    {
+        $settings = new Settings();
 
-		$this->assertSame('pooh', $settings->get('winnie'));
-	}
+        $result = $settings->winnie = 'pooh';
 
-	public function testConfigMagicGet()
-	{
-		$this->assertSame('Organization', config('Settings')->orgName);
+        $this->assertSame('pooh', $settings->get('winnie'));
+    }
 
-		// Ignores missing templates
-		$this->assertNull(config('Settings')->anomander);
-	}
+    public function testConfigMagicGet()
+    {
+        $this->assertSame('Organization', config('Settings')->orgName);
 
-	public function testConfigMagicGetIgnoresOverrides()
-	{
-		$user     = $this->createAuthUser();
-		service('settings')->set('perPage', 1000000);
+        // Ignores missing templates
+        $this->assertNull(config('Settings')->anomander);
+    }
 
-		$this->assertSame(10, config('Settings')->perPage);
-	}
+    public function testConfigMagicGetIgnoresOverrides()
+    {
+        $user = $this->createAuthUser();
+        service('settings')->set('perPage', 1000000);
+
+        $this->assertSame(10, config('Settings')->perPage);
+    }
 }

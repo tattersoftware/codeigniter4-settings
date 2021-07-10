@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of Tatter Settings.
+ *
+ * (c) 2021 Tatter Software
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 use CodeIgniter\Test\DatabaseTestTrait;
 use CodeIgniter\Test\Filters\CITestStreamFilter;
 use Tatter\Settings\Models\SettingModel;
@@ -7,73 +16,75 @@ use Tests\Support\SettingsTestCase;
 
 /**
  * @see https://github.com/codeigniter4/CodeIgniter4/blob/develop/tests/system/Commands/HelpCommandTest.php
+ *
+ * @internal
  */
 final class CommandsTest extends SettingsTestCase
 {
-	use DatabaseTestTrait;
+    use DatabaseTestTrait;
 
-	/**
-	 * @var resource
-	 */
-	private $streamFilter;
+    /**
+     * @var resource
+     */
+    private $streamFilter;
 
-	protected function setUp(): void
-	{
-		parent::setUp();
+    protected function setUp(): void
+    {
+        parent::setUp();
 
-		CITestStreamFilter::$buffer = '';
+        CITestStreamFilter::$buffer = '';
 
-		$this->streamFilter = stream_filter_append(STDOUT, 'CITestStreamFilter');
-		$this->streamFilter = stream_filter_append(STDERR, 'CITestStreamFilter');
-	}
+        $this->streamFilter = stream_filter_append(STDOUT, 'CITestStreamFilter');
+        $this->streamFilter = stream_filter_append(STDERR, 'CITestStreamFilter');
+    }
 
-	protected function tearDown(): void
-	{
-		stream_filter_remove($this->streamFilter);
-	}
+    protected function tearDown(): void
+    {
+        stream_filter_remove($this->streamFilter);
+    }
 
-	private function getBuffer()
-	{
-		return CITestStreamFilter::$buffer;
-	}
+    //--------------------------------------------------------------------
 
-	//--------------------------------------------------------------------
+    public function testListCommand()
+    {
+        command('settings:list');
 
-	public function testListCommand()
-	{
-		command('settings:list');
+        $this->assertStringContainsString('Your organization phone', $this->getBuffer());
+    }
 
-		$this->assertStringContainsString('Your organization phone', $this->getBuffer());
-	}
+    public function testListCommandEmpty()
+    {
+        model(SettingModel::class)->builder()->truncate();
 
-	public function testListCommandEmpty()
-	{
-		model(SettingModel::class)->builder()->truncate();
+        command('settings:list');
 
-		command('settings:list');
+        $this->assertStringContainsString('No settings templates', $this->getBuffer());
+    }
 
-		$this->assertStringContainsString('No settings templates', $this->getBuffer());
-	}
+    public function testAddCommand()
+    {
+        command('settings:add fruits string "Favorite fruits" bananas 1');
 
-	public function testAddCommand()
-	{
-		command('settings:add fruits string "Favorite fruits" bananas 1');
+        $this->assertSame('bananas', service('settings')->fruits);
+        $this->assertStringContainsString('fruits', $this->getBuffer());
+    }
 
-		$this->assertSame('bananas', service('settings')->fruits);
-		$this->assertStringContainsString('fruits', $this->getBuffer());
-	}
+    public function testAddCommandInvalidName()
+    {
+        command('settings:add illegal:character string "Favorite fruits" bananas 1');
 
-	public function testAddCommandInvalidName()
-	{
-		command('settings:add illegal:character string "Favorite fruits" bananas 1');
+        $this->assertStringContainsString('key contains reserved characters', $this->getBuffer());
+    }
 
-		$this->assertStringContainsString('key contains reserved characters', $this->getBuffer());
-	}
+    public function testAddCommandInvalidDatatype()
+    {
+        command('settings:add fruits ThisDatatypeIsFarTooLongToBeAllowed "Favorite fruits" bananas 1');
 
-	public function testAddCommandInvalidDatatype()
-	{
-		command('settings:add fruits ThisDatatypeIsFarTooLongToBeAllowed "Favorite fruits" bananas 1');
+        $this->assertStringContainsString('The datatype field cannot exceed 31 characters in length', $this->getBuffer());
+    }
 
-		$this->assertStringContainsString('The datatype field cannot exceed 31 characters in length', $this->getBuffer());
-	}
+    private function getBuffer()
+    {
+        return CITestStreamFilter::$buffer;
+    }
 }
