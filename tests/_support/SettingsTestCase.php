@@ -16,10 +16,7 @@ use CodeIgniter\Test\DatabaseTestTrait;
 use Tatter\Settings\Database\Seeds\SettingSeeder;
 use Tatter\Settings\Models\SettingModel;
 
-/**
- * @internal
- */
-final class SettingsTestCase extends CIUnitTestCase
+abstract class SettingsTestCase extends CIUnitTestCase
 {
     use DatabaseTestTrait;
 
