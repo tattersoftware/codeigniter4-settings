@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of Tatter Settings.
+ *
+ * (c) 2021 Tatter Software
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
 use Nexus\CsConfig\Factory;
 use PhpCsFixer\Finder;
 use Tatter\Tools\Standard;
@@ -18,12 +27,9 @@ $options = [
     'cacheFile' => 'build/.php-cs-fixer.cache',
 ];
 
-/* Reenable after incremental changes are applied
 return Factory::create(new Standard(), $overrides, $options)->forLibrary(
-    'Library',
+    'Tatter Settings',
     'Tatter Software',
     '',
     2021
 );
- */
-return Factory::create(new Standard(), $overrides, $options)->forProjects();
