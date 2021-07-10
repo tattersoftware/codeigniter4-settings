@@ -12,37 +12,37 @@ use Tatter\Settings\Models\SettingModel;
  */
 final class SettingsTestCase extends CIUnitTestCase
 {
-	use DatabaseTestTrait;
+    use DatabaseTestTrait;
 
-	/**
-	 * @var bool
-	 */
-	protected $refresh = true;
+    /**
+     * @var bool
+     */
+    protected $refresh = true;
 
-	/**
-	 * @var array|string|null
-	 */
-	protected $namespace;
+    /**
+     * @var array|string|null
+     */
+    protected $namespace;
 
-	/**
-	 * @var array|string
-	 */
-	protected $seed = SettingSeeder::class;
+    /**
+     * @var array|string
+     */
+    protected $seed = SettingSeeder::class;
 
-	/**
-	 * Initializes required helpers.
-	 */
-	public static function setUpBeforeClass(): void
-	{
-		parent::setUpBeforeClass();
+    /**
+     * Initializes required helpers.
+     */
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
 
-		helper(['auth']);
-	}
+        helper(['auth']);
+    }
 
-	protected function setUp(): void
-	{
-		parent::setUp();
+    protected function setUp(): void
+    {
+        parent::setUp();
 
-		model(SettingModel::class)->clearTemplates();
-	}
+        model(SettingModel::class)->clearTemplates();
+    }
 }

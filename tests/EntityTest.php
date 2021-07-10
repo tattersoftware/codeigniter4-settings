@@ -9,45 +9,45 @@ use Tests\Support\SettingsTestCase;
  */
 final class EntityTest extends SettingsTestCase
 {
-	public function testContentCastDefaultsToString()
-	{
-		$setting = new Setting(['content' => 42]);
+    public function testContentCastDefaultsToString()
+    {
+        $setting = new Setting(['content' => 42]);
 
-		$this->assertSame('42', $setting->content);
-	}
+        $this->assertSame('42', $setting->content);
+    }
 
-	public function testContentCastsToDatatype()
-	{
-		$setting = new Setting([
-			'datatype' => 'int',
-			'content'  => '12.34',
-		]);
+    public function testContentCastsToDatatype()
+    {
+        $setting = new Setting([
+            'datatype' => 'int',
+            'content'  => '12.34',
+        ]);
 
-		$this->assertSame(12, $setting->content);
-	}
+        $this->assertSame(12, $setting->content);
+    }
 
-	public function testContentJsonCastsToDatatype()
-	{
-		$array = [
-			'a' => 'Bananas',
-			'b' => 'Oranges',
-		];
+    public function testContentJsonCastsToDatatype()
+    {
+        $array = [
+            'a' => 'Bananas',
+            'b' => 'Oranges',
+        ];
 
-		$setting = new Setting([
-			'datatype' => 'json-array',
-			'content'  => $array,
-		]);
+        $setting = new Setting([
+            'datatype' => 'json-array',
+            'content'  => $array,
+        ]);
 
-		$check = $this->getPrivateProperty($setting, 'attributes')['content'];
-		$this->assertSame('{"a":"Bananas","b":"Oranges"}', $check);
+        $check = $this->getPrivateProperty($setting, 'attributes')['content'];
+        $this->assertSame('{"a":"Bananas","b":"Oranges"}', $check);
 
-		$this->assertSame($array, $setting->content);
-	}
+        $this->assertSame($array, $setting->content);
+    }
 
-	public function testFaked()
-	{
-		$setting = fake(SettingModel::class, null, false);
+    public function testFaked()
+    {
+        $setting = fake(SettingModel::class, null, false);
 
-		$this->assertInstanceOf(Setting::class, $setting);
-	}
+        $this->assertInstanceOf(Setting::class, $setting);
+    }
 }

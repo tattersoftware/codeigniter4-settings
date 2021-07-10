@@ -10,11 +10,7 @@ $finder = Finder::create()
     ->exclude('build')
     ->append([__FILE__]);
 
-// Remove overrides for incremental changes
 $overrides = [
-	'array_indentation' => false,
-	'braces'            => false,
-	'indentation_type'  => false,
 ];
 
 $options = [
@@ -29,5 +25,5 @@ return Factory::create(new Standard(), $overrides, $options)->forLibrary(
     '',
     2021
 );
-*/
+ */
 return Factory::create(new Standard(), $overrides, $options)->forProjects();

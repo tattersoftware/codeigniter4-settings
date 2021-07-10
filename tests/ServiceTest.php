@@ -8,10 +8,10 @@ use Tatter\Settings\Settings;
  */
 final class ServiceTest extends CIUnitTestCase
 {
-	public function testServiceReturnsLibrary()
-	{
-		$result = service('settings');
+    public function testServiceReturnsLibrary()
+    {
+        $result = service('settings');
 
-		$this->assertInstanceOf(Settings::class, $result);
-	}
+        $this->assertInstanceOf(Settings::class, $result);
+    }
 }
