@@ -15,16 +15,13 @@ use CodeIgniter\Entity\Entity;
 
 class Setting extends Entity
 {
-    protected $table = 'settings';
-
+    protected $table      = 'settings';
     protected $primaryKey = 'id';
-
-    protected $dates = [
+    protected $dates      = [
         'created_at',
         'updated_at',
         'deleted_at',
     ];
-
     protected $casts = [
         'id'        => '?int',
         'protected' => 'bool',
@@ -33,10 +30,8 @@ class Setting extends Entity
     /**
      * Forces the content to cast
      * to its predefined datatype.
-     *
-     * @param array|null $data
      */
-    public function __construct(array $data = null)
+    public function __construct(?array $data = null)
     {
         $this->setContentCast($data['datatype'] ?? 'string');
 
@@ -46,8 +41,6 @@ class Setting extends Entity
     /**
      * Sets the cast datatype for
      * the content field.
-     *
-     * @param string $datatype
      *
      * @return $this
      */

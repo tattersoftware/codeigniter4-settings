@@ -11,24 +11,16 @@ $finder = Finder::create()
     ->append([__FILE__]);
 
 // Remove overrides for incremental changes
-$overrides = [
-	'array_indentation' => false,
-	'braces'            => false,
-	'indentation_type'  => false,
-];
+$overrides = [];
 
 $options = [
     'finder'    => $finder,
     'cacheFile' => 'build/.php-cs-fixer.cache',
 ];
 
-return Factory::create(new CodeIgniter4(), $overrides, $options)->forProjects();
-
-/* Reenable For libraries after incremental changes are applied
 return Factory::create(new CodeIgniter4(), $overrides, $options)->forLibrary(
     'Tatter Settings',
     'Tatter Software',
     '',
     2021
 );
- */

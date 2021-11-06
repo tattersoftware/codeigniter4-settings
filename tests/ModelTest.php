@@ -9,7 +9,6 @@
  * the LICENSE file that was distributed with this source code.
  */
 
-use Tatter\Settings\Models\SettingModel;
 use Tests\Support\SettingsTestCase;
 
 /**

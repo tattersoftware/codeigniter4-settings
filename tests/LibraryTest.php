@@ -12,7 +12,6 @@
 use CodeIgniter\Test\DatabaseTestTrait;
 use Myth\Auth\Test\AuthTestTrait;
 use Tatter\Settings\Entities\Setting;
-use Tatter\Settings\Models\SettingModel;
 use Tatter\Settings\Settings;
 use Tests\Support\SettingsTestCase;
 
@@ -25,8 +24,7 @@ final class LibraryTest extends SettingsTestCase
     use DatabaseTestTrait;
 
     protected $migrateOnce = true;
-
-    protected $seedOnce = true;
+    protected $seedOnce    = true;
 
     protected function tearDown(): void
     {

@@ -19,8 +19,6 @@ class Settings extends BaseConfig
      * Matches config value requests to its
      * corresponding Setting template.
      *
-     * @param string $name
-     *
      * @return mixed Null for non-existant templates
      */
     public function __get(string $name)

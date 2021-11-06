@@ -21,20 +21,18 @@ use Tatter\Settings\Models\SettingModel;
  */
 class Settings
 {
-	/**
-	 * @var SettingModel
-	 */
-	protected $model;
+    /**
+     * @var SettingModel
+     */
+    protected $model;
 
     public function __construct(?SettingModel $model = null)
     {
-    	$this->model = $model ?? model(SettingModel::class); // @phpstan-ignore-line
+        $this->model = $model ?? model(SettingModel::class); // @phpstan-ignore-line
     }
 
     /**
      * Magic getter.
-     *
-     * @param string $name
      *
      * @return mixed
      */
@@ -48,10 +46,7 @@ class Settings
     /**
      * Magic setter for changing a setting.
      *
-     * @param string     $name
      * @param mixed|null $content
-     *
-     * @return void
      */
     public function __set(string $name, $content): void
     {
@@ -63,8 +58,6 @@ class Settings
      * Since this library relies on Cache
      * and it is fairly restrictive we use
      * its validation.
-     *
-     * @param string $name
      *
      * @throws InvalidArgumentException
      *
@@ -81,10 +74,6 @@ class Settings
 
     /**
      * Gets a Setting template, if it exists.
-     *
-     * @param string $name
-     *
-     * @return Setting|null
      */
     public function getTemplate(string $name): ?Setting
     {
@@ -97,8 +86,6 @@ class Settings
 
     /**
      * Retrieves Setting content by its name.
-     *
-     * @param string $name
      *
      * @return mixed|null
      */
@@ -135,8 +122,7 @@ class Settings
     /**
      * Updates a Setting value.
      *
-     * @param string $name
-     * @param mixed  $content Null to remove
+     * @param mixed $content Null to remove
      *
      * @return $this
      */
@@ -174,8 +160,7 @@ class Settings
      * Always called when retrieving a value to improve chances
      * at a hit next time.
      *
-     * @param string $name
-     * @param mixed  $content
+     * @param mixed $content
      *
      * @return mixed
      */
