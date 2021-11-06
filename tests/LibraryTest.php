@@ -33,7 +33,7 @@ final class LibraryTest extends SettingsTestCase
         parent::tearDown();
 
         $this->resetAuthServices();
-        model(SettingModel::class)->clearTemplates();
+        $this->model->clearTemplates();
     }
 
     public function testInvalidNameThrowsException()
@@ -183,7 +183,7 @@ final class LibraryTest extends SettingsTestCase
 
         // Remove records from the cache and database so
         // we are certain this is coming from the model storage
-        model(SettingModel::class)->builder('settings_users')->truncate();
+        $this->model->builder('settings_users')->truncate();
         unset($_SESSION['settings-theme']);
         cache()->clean();
 

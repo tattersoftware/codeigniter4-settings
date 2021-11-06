@@ -21,7 +21,15 @@ use Tatter\Settings\Models\SettingModel;
  */
 class Settings
 {
-    //--------------------------------------------------------------------
+	/**
+	 * @var SettingModel
+	 */
+	protected $model;
+
+    public function __construct(?SettingModel $model = null)
+    {
+    	$this->model = $model ?? model(SettingModel::class); // @phpstan-ignore-line
+    }
 
     /**
      * Magic getter.
@@ -82,7 +90,7 @@ class Settings
     {
         self::validate($name);
 
-        $templates = model(SettingModel::class)->getTemplates();
+        $templates = $this->model->getTemplates();
 
         return $templates[$name] ?? null;
     }
@@ -114,7 +122,7 @@ class Settings
         }
 
         // Check if this user has overrides
-        if ($overrides = model(SettingModel::class)->getOverrides($userId)) {
+        if ($overrides = $this->model->getOverrides($userId)) {
             // Match the Setting to its potential override
             if (array_key_exists($setting->id, $overrides)) {
                 $setting->content = $overrides[$setting->id];
@@ -152,7 +160,7 @@ class Settings
 
         // If there is a user then create an override
         if (function_exists('user_id') && null !== $userId = user_id()) {
-            model(SettingModel::class)->setOverride($setting->id, $userId, $content);
+            $this->model->setOverride($setting->id, $userId, $content);
         }
 
         // Update the session
