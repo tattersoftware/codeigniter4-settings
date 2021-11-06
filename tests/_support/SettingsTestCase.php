@@ -36,6 +36,11 @@ abstract class SettingsTestCase extends CIUnitTestCase
     protected $seed = SettingSeeder::class;
 
     /**
+     * @var SettingModel
+     */
+    protected $model;
+
+    /**
      * Initializes required helpers.
      */
     public static function setUpBeforeClass(): void
@@ -49,6 +54,10 @@ abstract class SettingsTestCase extends CIUnitTestCase
     {
         parent::setUp();
 
-        model(SettingModel::class)->clearTemplates();
+        /** @var SettingModel $model */
+        $model = model(SettingModel::class);
+        $model->clearTemplates();
+
+        $this->model = $model;
     }
 }

@@ -19,15 +19,11 @@ use Tatter\Settings\Settings;
 
 class SettingsAdd extends BaseCommand
 {
-    protected $group = 'Settings';
-
-    protected $name = 'settings:add';
-
+    protected $group       = 'Settings';
+    protected $name        = 'settings:add';
     protected $description = 'Adds a setting template to the database.';
-
-    protected $usage = 'settings:add [name] [datatype] [summary] [content] [protected]';
-
-    protected $arguments = [
+    protected $usage       = 'settings:add [name] [datatype] [summary] [content] [protected]';
+    protected $arguments   = [
         'name'      => 'The name of the setting (e.g. "timezone")',
         'summary'   => "A brief summary of this setting's purpose",
         'content'   => 'The default value for the setting',

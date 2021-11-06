@@ -18,26 +18,19 @@ use Tatter\Settings\Entities\Setting;
 
 class SettingModel extends Model
 {
-    protected $table = 'settings';
-
-    protected $primaryKey = 'id';
-
-    protected $returnType = Setting::class;
-
-    protected $useTimestamps = true;
-
+    protected $table          = 'settings';
+    protected $primaryKey     = 'id';
+    protected $returnType     = Setting::class;
+    protected $useTimestamps  = true;
     protected $useSoftDeletes = true;
-
     protected $skipValidation = false;
-
-    protected $allowedFields = [
+    protected $allowedFields  = [
         'name',
         'datatype',
         'summary',
         'content',
         'protected',
     ];
-
     protected $validationRules = [
         'name'      => 'required|max_length[63]',
         'datatype'  => 'required|max_length[31]',
@@ -45,11 +38,8 @@ class SettingModel extends Model
         'content'   => 'permit_empty|max_length[255]',
         'protected' => 'in_list[0,1]',
     ];
-
     protected $afterInsert = ['clearTemplates'];
-
     protected $afterUpdate = ['clearTemplates'];
-
     protected $afterDelete = ['clearTemplates'];
 
     /**
@@ -95,7 +85,7 @@ class SettingModel extends Model
         $ttl = config('Cache')->ttl ?? 5 * MINUTE;
 
         // If caching is disabled or no cache is matched...
-        if (is_null($ttl) || null === $templates = cache('settings-templates')) {
+        if (null === $ttl || null === $templates = cache('settings-templates')) {
             // ... then have to load from the database instead
             $templates = $this->builder()
                 ->select(['id', 'name', 'datatype', 'content', 'protected'])
@@ -108,6 +98,7 @@ class SettingModel extends Model
 
         // Convert the arrays to Setting entities and index by name
         self::$templates = [];
+
         foreach ($templates as $template) {
             self::$templates[$template['name']] = (new Setting())->setContentCast($template['datatype'])->setAttributes($template);
         }
@@ -117,8 +108,6 @@ class SettingModel extends Model
 
     /**
      * Retrieves all of a user's overrides.
-     *
-     * @param int $userId
      *
      * @return array<int,mixed>
      */
@@ -130,6 +119,7 @@ class SettingModel extends Model
 
         // Load from the database
         self::$overrides[$userId] = [];
+
         foreach ($this->builder('settings_users')->where('user_id', $userId)->get()->getResultArray() as $override) {
             self::$overrides[$userId][$override['setting_id']] = $override['content'];
         }
@@ -140,11 +130,7 @@ class SettingModel extends Model
     /**
      * Sets a user override for a Setting.
      *
-     * @param int   $settingId
-     * @param int   $userId
      * @param mixed $content
-     *
-     * @return void
      */
     public function setOverride(int $settingId, int $userId, $content): void
     {
@@ -172,10 +158,6 @@ class SettingModel extends Model
 
     /**
      * Faked data for Fabricator.
-     *
-     * @param Generator $faker
-     *
-     * @return Setting
      */
     public function fake(Generator &$faker): Setting
     {

@@ -25,7 +25,7 @@
         "codeigniter4/authentication-implementation": "^1.0",
         "codeigniter4/codeigniter4": "dev-develop",
         "myth/auth": "^1.0",
-        "tatter/tools": "^1.10"
+        "tatter/tools": "^1.15"
     },
     "suggest": {
         "codeigniter4/authentication-implementation": "Allows for user setting overrides"
@@ -53,9 +53,18 @@
     "prefer-stable": true,
     "scripts": {
         "analyze": "phpstan analyze",
+        "ci": [
+            "Composer\\Config::disableProcessTimeout",
+            "@deduplicate",
+            "@analyze",
+            "@test",
+            "@inspect",
+            "@style"
+        ],
+        "deduplicate": "phpcpd app/ src/",
         "inspect": "deptrac analyze --cache-file=build/deptrac.cache",
         "mutate": "infection --threads=2 --skip-initial-tests --coverage=build/phpunit",
-        "style": "php-cs-fixer fix --verbose --ansi",
+        "style": "php-cs-fixer fix --verbose --ansi --using-cache=no",
         "test": "phpunit"
     }
 }

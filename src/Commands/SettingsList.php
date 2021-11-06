@@ -17,10 +17,8 @@ use Tatter\Settings\Models\SettingModel;
 
 class SettingsList extends BaseCommand
 {
-    protected $group = 'Settings';
-
-    protected $name = 'settings:list';
-
+    protected $group       = 'Settings';
+    protected $name        = 'settings:list';
     protected $description = 'Lists setting templates from the database.';
 
     public function run(array $params)

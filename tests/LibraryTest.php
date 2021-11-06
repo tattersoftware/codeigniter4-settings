@@ -12,7 +12,6 @@
 use CodeIgniter\Test\DatabaseTestTrait;
 use Myth\Auth\Test\AuthTestTrait;
 use Tatter\Settings\Entities\Setting;
-use Tatter\Settings\Models\SettingModel;
 use Tatter\Settings\Settings;
 use Tests\Support\SettingsTestCase;
 
@@ -25,15 +24,14 @@ final class LibraryTest extends SettingsTestCase
     use DatabaseTestTrait;
 
     protected $migrateOnce = true;
-
-    protected $seedOnce = true;
+    protected $seedOnce    = true;
 
     protected function tearDown(): void
     {
         parent::tearDown();
 
         $this->resetAuthServices();
-        model(SettingModel::class)->clearTemplates();
+        $this->model->clearTemplates();
     }
 
     public function testInvalidNameThrowsException()
@@ -183,7 +181,7 @@ final class LibraryTest extends SettingsTestCase
 
         // Remove records from the cache and database so
         // we are certain this is coming from the model storage
-        model(SettingModel::class)->builder('settings_users')->truncate();
+        $this->model->builder('settings_users')->truncate();
         unset($_SESSION['settings-theme']);
         cache()->clean();
 

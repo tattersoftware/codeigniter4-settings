@@ -9,7 +9,6 @@
  * the LICENSE file that was distributed with this source code.
  */
 
-use Tatter\Settings\Models\SettingModel;
 use Tests\Support\SettingsTestCase;
 
 /**
@@ -20,7 +19,7 @@ final class ModelTest extends SettingsTestCase
     public function testGetTemplatesDoesNotCastDatabaseValues()
     {
         // Insert using the model (e.g., admin dashboard)
-        model(SettingModel::class)->insert([
+        $this->model->insert([
             'name'      => 'fruits',
             'datatype'  => 'json-array',
             'summary'   => 'Yummy fruits',
@@ -29,11 +28,10 @@ final class ModelTest extends SettingsTestCase
         ]);
 
         // Load templates from the database into the model
-        $model = model(SettingModel::class);
-        $model->getTemplates();
+        $this->model->getTemplates();
 
         // The attibute of the entity should be encoded
-        $setting   = $this->getPrivateProperty($model, 'templates')['fruits'];
+        $setting   = $this->getPrivateProperty($this->model, 'templates')['fruits'];
         $attribute = $this->getPrivateProperty($setting, 'attributes')['content'];
 
         $this->assertSame('{"a":"Bananas","b":"Oranges"}', $attribute);

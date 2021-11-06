@@ -21,12 +21,18 @@ use Tatter\Settings\Models\SettingModel;
  */
 class Settings
 {
-    //--------------------------------------------------------------------
+    /**
+     * @var SettingModel
+     */
+    protected $model;
+
+    public function __construct(?SettingModel $model = null)
+    {
+        $this->model = $model ?? model(SettingModel::class); // @phpstan-ignore-line
+    }
 
     /**
      * Magic getter.
-     *
-     * @param string $name
      *
      * @return mixed
      */
@@ -40,10 +46,7 @@ class Settings
     /**
      * Magic setter for changing a setting.
      *
-     * @param string     $name
      * @param mixed|null $content
-     *
-     * @return void
      */
     public function __set(string $name, $content): void
     {
@@ -55,8 +58,6 @@ class Settings
      * Since this library relies on Cache
      * and it is fairly restrictive we use
      * its validation.
-     *
-     * @param string $name
      *
      * @throws InvalidArgumentException
      *
@@ -73,24 +74,18 @@ class Settings
 
     /**
      * Gets a Setting template, if it exists.
-     *
-     * @param string $name
-     *
-     * @return Setting|null
      */
     public function getTemplate(string $name): ?Setting
     {
         self::validate($name);
 
-        $templates = model(SettingModel::class)->getTemplates();
+        $templates = $this->model->getTemplates();
 
         return $templates[$name] ?? null;
     }
 
     /**
      * Retrieves Setting content by its name.
-     *
-     * @param string $name
      *
      * @return mixed|null
      */
@@ -114,7 +109,7 @@ class Settings
         }
 
         // Check if this user has overrides
-        if ($overrides = model(SettingModel::class)->getOverrides($userId)) {
+        if ($overrides = $this->model->getOverrides($userId)) {
             // Match the Setting to its potential override
             if (array_key_exists($setting->id, $overrides)) {
                 $setting->content = $overrides[$setting->id];
@@ -127,8 +122,7 @@ class Settings
     /**
      * Updates a Setting value.
      *
-     * @param string $name
-     * @param mixed  $content Null to remove
+     * @param mixed $content Null to remove
      *
      * @return $this
      */
@@ -152,7 +146,7 @@ class Settings
 
         // If there is a user then create an override
         if (function_exists('user_id') && null !== $userId = user_id()) {
-            model(SettingModel::class)->setOverride($setting->id, $userId, $content);
+            $this->model->setOverride($setting->id, $userId, $content);
         }
 
         // Update the session
@@ -166,8 +160,7 @@ class Settings
      * Always called when retrieving a value to improve chances
      * at a hit next time.
      *
-     * @param string $name
-     * @param mixed  $content
+     * @param mixed $content
      *
      * @return mixed
      */
