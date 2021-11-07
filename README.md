@@ -6,6 +6,19 @@ Lightweight settings management for CodeIgniter 4
 [![](https://github.com/tattersoftware/codeigniter4-settings/workflows/Deptrac/badge.svg)](https://github.com/tattersoftware/codeigniter4-settings/actions/workflows/inspect.yml)
 [![Coverage Status](https://coveralls.io/repos/github/tattersoftware/codeigniter4-settings/badge.svg?branch=develop)](https://coveralls.io/github/tattersoftware/codeigniter4-settings?branch=develop)
 
+## WARNING
+
+Since this library's last major version the CodeIgniter team has published its own
+[Settings Library](https://github.com/codeigniter4/settings). That library and this offer
+some non-overlapping features but they do represent a conflict in name and implementation.
+The future of this library is not yet determined, but some options are:
+* Deprecate this library and move any missing features to the CodeIgniter version
+* Rework this library as an extension of the official package
+* Maintain the current functionality with a name change to avoid conflict
+
+To follow or contribute to the planning for this library please visit the
+[Upcoming Changes Discussion](https://github.com/tattersoftware/codeigniter4-settings/discussions/31).
+
 ## Quick Start
 
 1. Install with Composer: `> composer require tatter/settings`
