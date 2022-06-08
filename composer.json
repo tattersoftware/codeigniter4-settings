@@ -25,7 +25,7 @@
         "codeigniter4/authentication-implementation": "^1.0",
         "codeigniter4/codeigniter4": "dev-develop",
         "myth/auth": "^1.0",
-        "tatter/tools": "^1.15"
+        "tatter/tools": "^1.15 || ^2.0"
     },
     "suggest": {
         "codeigniter4/authentication-implementation": "Allows for user setting overrides"
